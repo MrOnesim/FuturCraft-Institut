@@ -44,6 +44,10 @@ export function StatCounter({
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
+    if (typeof IntersectionObserver === "undefined") {
+      const t = setTimeout(() => setActive(true), 0);
+      return () => clearTimeout(t);
+    }
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -60,7 +64,7 @@ export function StatCounter({
   }, []);
 
   return (
-    <span ref={ref}>
+    <span ref={ref} className="tabular-nums">
       {prefix}
       {value.toLocaleString("fr-FR")}
       {suffix}

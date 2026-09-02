@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { AlertTriangle, RefreshCw, Home } from "lucide-react";
 import Link from "next/link";
+import { RefreshCw, ArrowUpRight } from "lucide-react";
 
 export default function Error({
   error,
@@ -16,42 +16,40 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="min-h-[70vh] bg-slate-50/60 flex items-center justify-center px-4 relative overflow-hidden">
-      <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" />
-      <div className="relative max-w-lg w-full mx-auto text-center space-y-6 py-20">
-        <div className="mx-auto w-20 h-20 rounded-3xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shadow-lg">
-          <AlertTriangle className="w-9 h-9" />
+    <div className="bg-paper">
+      <section className="border-b border-ink">
+        <div className="wrap grid gap-10 py-20 lg:grid-cols-12 lg:items-end lg:py-28">
+          <div className="lg:col-span-8">
+            <p className="eyebrow text-brand-700">Une erreur est survenue</p>
+            <p className="numeral mt-6 text-[clamp(6rem,22vw,20rem)] text-ink" aria-hidden>
+              500
+            </p>
+            <h1 className="display-md mt-2 text-ink">
+              Oups, quelque chose s&apos;est{" "}
+              <span className="serif-accent font-normal text-brand-700">mal passé.</span>
+            </h1>
+          </div>
+          <div className="lg:col-span-4">
+            <p className="text-base leading-7 text-ink/65">
+              Un problème technique a interrompu l&apos;affichage de cette page. Réessayez ou revenez à
+              l&apos;accueil.
+            </p>
+            {error.digest && (
+              <p className="mt-3 text-xs text-ink/40">Référence : {error.digest}</p>
+            )}
+            <div className="mt-8 flex flex-wrap gap-3">
+              <button onClick={reset} className="btn btn-ink">
+                <RefreshCw className="h-4 w-4" />
+                Réessayer
+              </button>
+              <Link href="/" className="btn btn-outline">
+                Accueil
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
         </div>
-
-        <div className="space-y-2">
-          <p className="text-sm font-bold uppercase tracking-widest text-amber-600">
-            Une erreur est survenue
-          </p>
-          <h1 className="text-3xl sm:text-4xl font-black text-slate-950 tracking-tight">
-            Oups, quelque chose s&apos;est mal passé.
-          </h1>
-          <p className="text-slate-600 text-base">
-            Un problème technique a interrompu l&apos;affichage de cette page. Réessayez ou revenez à l&apos;accueil.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-          <button
-            onClick={reset}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 shadow-lg shadow-blue-600/25 transition-all"
-          >
-            <RefreshCw className="w-4 h-4" />
-            <span>Réessayer</span>
-          </button>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 shadow-xs transition-all"
-          >
-            <Home className="w-4 h-4 text-blue-600" />
-            <span>Accueil</span>
-          </Link>
-        </div>
-      </div>
+      </section>
     </div>
   );
 }

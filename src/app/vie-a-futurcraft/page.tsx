@@ -1,16 +1,9 @@
 import { getEvents } from "@/lib/data-service";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  CalendarDays,
-  Users,
-  MapPin,
-  ArrowRight,
-  Camera,
-  Trophy,
-  Coffee,
-  Code2,
-} from "lucide-react";
+import { CalendarDays, MapPin, ArrowUpRight } from "lucide-react";
+import { PageHero } from "@/components/PageHero";
+import { SectionHeading } from "@/components/SectionHeading";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -19,174 +12,173 @@ export const metadata = {
     "Découvrez l'ambiance, les hackathons, ateliers pratiques, sorties de promotion et moments de vie sur les campus de FuturCraft Institut.",
 };
 
+const lifeMoments = [
+  {
+    title: "Sorties terrain & vol drone",
+    desc: "Pratique en plein air à Ganvié, Ouidah et Calavi pour cartographier des parcelles et capturer des plans cinématiques.",
+    image: "/images/Excution-Ganvie.jpg",
+    tag: "Pratique terrain",
+  },
+  {
+    title: "Ateliers Code & Pizza",
+    desc: "Des sessions nocturnes de coding collaboratif pour débugger en équipe dans une ambiance festive et stimulante.",
+    image: "/images/ange.jpg",
+    tag: "Coding night",
+  },
+  {
+    title: "Masterclasses & conférences tech",
+    desc: "Interventions régulières d'ingénieurs internationaux, d'experts de Sèmè City et de fondateurs de startups béninoises.",
+    image: "/images/houessinon.jpg",
+    tag: "Masterclass",
+  },
+  {
+    title: "Studio design & shootings",
+    desc: "Prise en main des boîtiers, éclairages studio trois points, montage et conception d'identités de marque.",
+    image: "/images/Montage-Video.jpg",
+    tag: "Atelier créatif",
+  },
+];
+
 export default async function ViePage() {
   const events = await getEvents();
 
-  const lifeMoments = [
-    {
-      title: "Ateliers Code & Pizza",
-      desc: "Des sessions nocturnes de coding collaboratif pour débugger en équipe dans une ambiance festive et stimulante.",
-      image: "/images/pro2.jpg",
-      tag: "Coding Night",
-    },
-    {
-      title: "Sorties Terrain & Vol Drone",
-      desc: "Pratique en plein air à Ouidah et Calavi pour cartographier des parcelles agricoles et capturer des plans cinématiques.",
-      image: "/images/Excution-Ganvie.jpg",
-      tag: "Pratique Terrain",
-    },
-    {
-      title: "Masterclasses & Conférences Tech",
-      desc: "Interventions régulières d'ingénieurs de la Silicon Valley, d'experts de Sèmè City et de fondateurs de startups béninoises.",
-      image: "/images/projet-vano-baby.jpg",
-      tag: "Masterclass",
-    },
-    {
-      title: "Studio Design & Shootings Médias",
-      desc: "Prise en main des boîtiers Sony, éclairages studio trois points et conception d'identités de marque.",
-      image: "/images/Montage-Video.jpg",
-      tag: "Atelier Créatif",
-    },
-  ];
-
   return (
-    <div className="bg-white min-h-screen">
-      {/* Hero */}
-      <section className="bg-slate-950 text-white py-16 lg:py-24 border-b border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-          <span className="text-xs font-bold uppercase tracking-widest text-violet-400 bg-violet-950 px-3 py-1 rounded-full border border-violet-800">
-            Immersion &amp; Communauté
-          </span>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight">
-            La Vie à FuturCraft Institut
-          </h1>
-          <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
-            Plus qu&apos;une école, une communauté passionnée. Découvrez l&apos;ambiance sur nos campus, les hackathons effervescents et les moments inoubliables.
-          </p>
+    <div className="bg-paper">
+      <PageHero
+        eyebrow="Immersion & communauté"
+        title={
+          <>
+            Plus qu&apos;une école,
+            <br />
+            <span className="serif-accent font-normal text-brand-700">une communauté.</span>
+          </>
+        }
+        description="Hackathons, sorties terrain, masterclasses et soirées de code : découvrez l'ambiance du campus et les moments qui font une promotion."
+      />
+
+      {/* Mosaïque photo */}
+      <section className="border-b border-ink">
+        <div className="grid grid-cols-2 gap-px bg-ink md:grid-cols-4">
+          <div className="relative col-span-2 row-span-2 aspect-square overflow-hidden bg-ink md:aspect-auto">
+            <Image src="/images/Excution-Ganvie.jpg" alt="Sortie de promotion à Ganvié" fill priority sizes="(max-width: 768px) 100vw, 50vw" className="object-cover" />
+            <span className="tag tag-paper absolute left-4 top-4">Sortie de promotion — Ganvié</span>
+          </div>
+          <div className="relative aspect-square overflow-hidden bg-ink">
+            <Image src="/images/ange.jpg" alt="Atelier en salle" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />
+          </div>
+          <div className="relative aspect-square overflow-hidden bg-ink">
+            <Image src="/images/projet-vano-baby.jpg" alt="Salle de projet" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />
+          </div>
+          <div className="relative aspect-square overflow-hidden bg-ink">
+            <Image src="/images/Montage-Video.jpg" alt="Atelier montage vidéo" fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover" />
+          </div>
+          <div className="flex aspect-square flex-col justify-between bg-brand-700 p-6 text-paper">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-paper/60">Communauté</p>
+            <div>
+              <p className="numeral text-6xl lg:text-7xl">500+</p>
+              <p className="mt-3 text-sm leading-6 text-paper/80">
+                apprenants passés par le campus depuis l&apos;ouverture — et un réseau d&apos;alumni qui recrute.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-16">
-        {/* Événements à venir */}
-        <section className="space-y-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2.5 py-1 rounded">
-                Agenda Officiel
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-950 mt-1">
-                Événements &amp; Hackathons à Venir
-              </h2>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {events.map((ev) => (
-              <div
-                key={ev.id}
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-xl hover:border-blue-300 transition-all flex flex-col"
-              >
-                <div className="relative aspect-[16/10] bg-slate-100">
-                  <Image
-                    src={ev.imageUrl}
-                    alt={ev.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover"
-                  />
-                  <div className="absolute top-3 left-3">
-                    <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-blue-600 text-white">
-                      {ev.category}
-                    </span>
-                  </div>
+      {/* Agenda */}
+      <section className="border-b border-ink bg-paper">
+        <div className="wrap py-20 lg:py-28">
+          <SectionHeading
+            index="01"
+            eyebrow="Agenda officiel"
+            title={
+              <>
+                Événements & hackathons
+                <br className="hidden sm:block" />
+                <span className="serif-accent font-normal text-brand-700">à venir.</span>
+              </>
+            }
+          />
+          <ol className="mt-14 border-t-2 border-ink">
+            {events.map((ev, i) => (
+              <li key={ev.id} className="grid gap-5 border-b border-ink py-7 md:grid-cols-12 md:items-center md:gap-8">
+                <div className="md:col-span-2">
+                  <p className="numeral text-3xl text-ink/25">{String(i + 1).padStart(2, "0")}</p>
+                  <p className="mt-3 flex items-center gap-1.5 text-xs font-bold uppercase tracking-[0.14em] text-brand-700">
+                    <CalendarDays className="h-3.5 w-3.5" /> {ev.date}
+                  </p>
                 </div>
-
-                <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3 text-xs text-slate-500">
-                      <span className="flex items-center gap-1 font-semibold text-blue-600">
-                        <CalendarDays className="w-3.5 h-3.5" /> {ev.date}
-                      </span>
-                    </div>
-                    <h3 className="font-bold text-slate-900 text-base leading-snug">{ev.title}</h3>
-                    <p className="text-xs text-slate-600 leading-relaxed line-clamp-3">
-                      {ev.description}
-                    </p>
-                  </div>
-
-                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                    <span className="flex items-center gap-1 text-[11px]">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400" /> {ev.location}
-                    </span>
-                    <span className="font-bold text-slate-800">
-                      {ev.attendeesCount} inscrits
-                    </span>
-                  </div>
+                <div className="relative aspect-[16/10] overflow-hidden border border-ink bg-ink/5 md:col-span-3">
+                  <Image src={ev.imageUrl} alt={ev.title} fill sizes="(max-width: 768px) 100vw, 25vw" className="object-cover" />
                 </div>
-              </div>
+                <div className="md:col-span-5">
+                  <span className="tag text-ink/60">{ev.category}</span>
+                  <h3 className="display-sm mt-3 text-ink">{ev.title}</h3>
+                  <p className="mt-2 line-clamp-3 text-sm leading-6 text-ink/65">{ev.description}</p>
+                </div>
+                <div className="flex items-center justify-between gap-4 text-sm md:col-span-2 md:flex-col md:items-end">
+                  <span className="flex items-center gap-1.5 text-ink/60">
+                    <MapPin className="h-3.5 w-3.5" /> {ev.location}
+                  </span>
+                  <span className="font-display font-bold text-ink">{ev.attendeesCount} inscrits</span>
+                </div>
+              </li>
             ))}
-          </div>
-        </section>
+          </ol>
+        </div>
+      </section>
 
-        {/* Moments de vie grid */}
-        <section className="space-y-6 pt-6 border-t border-slate-200">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-violet-600 bg-violet-50 px-2.5 py-1 rounded">
-              Magazine Campus
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-950 mt-1">
-              Les Temps Forts de nos Promotions
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+      {/* Temps forts */}
+      <section className="border-b border-ink bg-paper-100">
+        <div className="wrap py-20 lg:py-28">
+          <SectionHeading
+            index="02"
+            eyebrow="Magazine campus"
+            title="Les temps forts de nos promotions."
+          />
+          <div className="mt-14 grid gap-px border border-ink bg-ink sm:grid-cols-2">
             {lifeMoments.map((m, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs hover:shadow-lg transition-all group"
-              >
-                <div className="aspect-[16/10] overflow-hidden bg-slate-100 relative">
+              <article key={m.title} className="group bg-paper">
+                <div className="relative aspect-[16/10] overflow-hidden border-b border-ink bg-ink/5">
                   <Image
                     src={m.image}
                     alt={m.title}
                     fill
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 640px) 100vw, 50vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                   />
-                  <div className="absolute top-3 left-3">
-                    <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-white/95 text-slate-900 backdrop-blur-xs shadow-xs">
-                      {m.tag}
-                    </span>
-                  </div>
+                  <span className="tag tag-paper absolute left-4 top-4">{m.tag}</span>
+                  <span className="numeral absolute bottom-3 right-4 text-5xl text-paper drop-shadow-md">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
                 </div>
-                <div className="p-6 space-y-2">
-                  <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                    {m.title}
-                  </h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">{m.desc}</p>
+                <div className="p-7">
+                  <h3 className="display-sm text-ink">{m.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-ink/65">{m.desc}</p>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* CTA */}
-        <section className="p-8 sm:p-12 rounded-3xl bg-blue-50/70 border border-blue-100 text-center space-y-4">
-          <h3 className="text-2xl font-black text-slate-950">Envie de vivre l&apos;expérience FuturCraft ?</h3>
-          <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
-            Participez à la prochaine journée portes ouvertes ou postulez directement en ligne pour rejoindre la prochaine cohorte.
-          </p>
-          <div className="pt-2">
-            <Link
-              href="/inscription"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md transition-all"
-            >
-              <span>Rejoindre la promotion 2026</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
+      {/* CTA */}
+      <section className="bg-ink text-paper">
+        <div className="wrap flex flex-col gap-8 py-16 lg:flex-row lg:items-center lg:justify-between lg:py-20">
+          <div>
+            <h2 className="display-md">
+              Envie de vivre <span className="serif-accent font-normal text-accent-400">l&apos;expérience ?</span>
+            </h2>
+            <p className="mt-4 max-w-xl text-base leading-7 text-paper/65">
+              Participez à la prochaine journée portes ouvertes ou postulez directement en ligne pour rejoindre la
+              prochaine cohorte.
+            </p>
           </div>
-        </section>
-      </div>
+          <Link href="/inscription" className="btn btn-accent btn-lg shrink-0">
+            Rejoindre la promotion 2026
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

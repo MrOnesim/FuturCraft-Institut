@@ -1,21 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Inter, Sora } from "next/font/google";
+import "@fontsource-variable/inter/wght.css";
+import "@fontsource-variable/bricolage-grotesque/opsz.css";
+import "@fontsource/instrument-serif/400-italic.css";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-sans",
-});
-
-const sora = Sora({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-display",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://futurcraft.bj"),
@@ -54,24 +44,24 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
-export const viewport = {
-  themeColor: "#2547eb",
+export const viewport: Viewport = {
+  themeColor: "#0b0f1a",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="fr" className="scroll-smooth">
-      <body
-        className={`${inter.variable} ${sora.variable} bg-slate-50/60 text-slate-900 antialiased min-h-screen flex flex-col selection:bg-blue-600 selection:text-white`}
-      >
+      <body className="flex min-h-screen flex-col bg-paper text-ink antialiased">
         <a
           href="#contenu"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-lg focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-white"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-paper"
         >
           Aller au contenu principal
         </a>
         <Header />
-        <main id="contenu" className="flex-1">{children}</main>
+        <main id="contenu" className="flex-1">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

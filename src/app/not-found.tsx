@@ -1,42 +1,38 @@
 import Link from "next/link";
-import { Compass, ArrowRight, Search } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="min-h-[70vh] bg-slate-50/60 flex items-center justify-center px-4 relative overflow-hidden">
-      <div className="absolute inset-0 bg-grid opacity-30 pointer-events-none" />
-      <div className="relative max-w-lg w-full mx-auto text-center space-y-6 py-20">
-        <div className="mx-auto w-20 h-20 rounded-3xl bg-gradient-to-tr from-blue-600 to-violet-600 flex items-center justify-center text-white shadow-xl shadow-blue-500/20">
-          <Compass className="w-9 h-9" />
+    <div className="bg-paper">
+      <section className="border-b border-ink">
+        <div className="wrap grid gap-10 py-20 lg:grid-cols-12 lg:items-end lg:py-28">
+          <div className="lg:col-span-8">
+            <p className="eyebrow text-brand-700">Erreur 404</p>
+            <p className="numeral mt-6 text-[clamp(6rem,22vw,20rem)] text-ink" aria-hidden>
+              404
+            </p>
+            <h1 className="display-md mt-2 text-ink">
+              Cette page n&apos;existe pas —{" "}
+              <span className="serif-accent font-normal text-brand-700">ou plus.</span>
+            </h1>
+          </div>
+          <div className="lg:col-span-4">
+            <p className="text-base leading-7 text-ink/65">
+              L&apos;adresse est peut-être erronée ou le contenu a été déplacé. Pas de panique : le campus n&apos;est
+              jamais loin.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/" className="btn btn-ink">
+                Retour à l&apos;accueil
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+              <Link href="/formations" className="btn btn-outline">
+                Voir les formations
+              </Link>
+            </div>
+          </div>
         </div>
-
-        <div className="space-y-2">
-          <p className="text-sm font-bold uppercase tracking-widest text-blue-600">Erreur 404</p>
-          <h1 className="text-4xl sm:text-5xl font-black text-slate-950 tracking-tight">
-            Page introuvable
-          </h1>
-          <p className="text-slate-600 text-base">
-            La page que vous cherchez n&apos;existe pas ou a été déplacée. Pas de panique, revenons sur le bon chemin.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-white bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 shadow-lg shadow-blue-600/25 transition-all"
-          >
-            <span>Retour à l&apos;accueil</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-          <Link
-            href="/formations"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold text-slate-700 bg-white hover:bg-slate-100 border border-slate-200 shadow-xs transition-all"
-          >
-            <Search className="w-4 h-4 text-blue-600" />
-            <span>Voir les formations</span>
-          </Link>
-        </div>
-      </div>
+      </section>
     </div>
   );
 }

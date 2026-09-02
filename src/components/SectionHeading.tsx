@@ -1,42 +1,55 @@
 import type { ReactNode } from "react";
 
 interface SectionHeadingProps {
-  eyebrow: string;
-  eyebrowColor?: string;
+  eyebrow?: string;
+  index?: string;
   title: ReactNode;
   description?: ReactNode;
   align?: "left" | "center";
+  tone?: "light" | "dark";
+  action?: ReactNode;
   className?: string;
 }
 
-const eyebrowPalette: Record<string, string> = {
-  blue: "text-blue-600 bg-blue-50 border-blue-100",
-  indigo: "text-indigo-600 bg-indigo-50 border-indigo-100",
-  violet: "text-violet-600 bg-violet-50 border-violet-100",
-  emerald: "text-emerald-600 bg-emerald-50 border-emerald-100",
-  slate: "text-slate-600 bg-slate-100 border-slate-200",
-};
-
+/**
+ * En-tête de section éditorial : sur-titre numéroté, grand titre, description,
+ * et une action optionnelle alignée à droite (sur desktop).
+ */
 export function SectionHeading({
   eyebrow,
-  eyebrowColor = "blue",
+  index,
   title,
   description,
-  align = "center",
+  align = "left",
+  tone = "light",
+  action,
   className = "",
 }: SectionHeadingProps) {
-  const alignClass = align === "center" ? "text-center mx-auto" : "text-left";
+  const isDark = tone === "dark";
+  const centered = align === "center";
+
   return (
-    <div className={`max-w-3xl ${alignClass} space-y-3 ${className}`}>
-      <span
-        className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-widest ${eyebrowPalette[eyebrowColor]}`}
-      >
-        {eyebrow}
-      </span>
-      <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight">{title}</h2>
-      {description ? (
-        <p className="text-slate-600 text-base sm:text-lg leading-relaxed">{description}</p>
-      ) : null}
+    <div
+      className={`flex flex-col gap-6 ${
+        centered ? "items-center text-center" : "lg:flex-row lg:items-end lg:justify-between"
+      } ${className}`}
+    >
+      <div className={centered ? "max-w-3xl" : "max-w-3xl"}>
+        {(eyebrow || index) && (
+          <p className={`eyebrow ${isDark ? "text-accent-400" : "text-brand-700"}`}>
+            {index && <span className="tabular-nums">{index}</span>}
+            {index && eyebrow && <span className={isDark ? "text-paper/30" : "text-ink/30"}>/</span>}
+            {eyebrow}
+          </p>
+        )}
+        <h2 className={`display-md mt-5 ${isDark ? "text-paper" : "text-ink"}`}>{title}</h2>
+        {description ? (
+          <p className={`mt-5 max-w-2xl text-base leading-7 sm:text-lg ${isDark ? "text-paper/65" : "text-ink/65"}`}>
+            {description}
+          </p>
+        ) : null}
+      </div>
+      {action ? <div className="shrink-0">{action}</div> : null}
     </div>
   );
 }

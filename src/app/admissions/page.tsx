@@ -1,20 +1,9 @@
 import Link from "next/link";
-import {
-  GraduationCap,
-  CreditCard,
-  CheckCircle2,
-  ArrowRight,
-  ShieldCheck,
-  Smartphone,
-  BadgeCheck,
-  Sparkles,
-  Clock,
-  MapPin,
-  Star,
-  ChevronRight,
-} from "lucide-react";
+import { ArrowUpRight, Smartphone, CreditCard, Banknote } from "lucide-react";
 import { getFormations } from "@/lib/data-service";
 import { FAQAccordion } from "@/components/FAQAccordion";
+import { PageHero } from "@/components/PageHero";
+import { SectionHeading } from "@/components/SectionHeading";
 
 export const dynamic = "force-dynamic";
 export const metadata = {
@@ -23,62 +12,57 @@ export const metadata = {
     "Modalités d'admission, grille tarifaire transparente en FCFA, facilités de paiement échelonné en 3 à 5 fois et FAQ.",
 };
 
+const formatPrice = (price: number) =>
+  new Intl.NumberFormat("fr-FR").format(price).replace(/\u202f/g, " ");
+
+const steps = [
+  {
+    n: "01",
+    title: "Exploration & choix",
+    desc: "Découvrez notre catalogue de 12 formations. Un conseiller vous aide gratuitement si vous hésitez sur votre orientation.",
+    meta: "Catalogue gratuit",
+  },
+  {
+    n: "02",
+    title: "Candidature en ligne",
+    desc: "Remplissez le formulaire en quelques minutes et obtenez instantanément votre numéro de dossier unique.",
+    meta: "Réponse instantanée",
+  },
+  {
+    n: "03",
+    title: "Validation & paiement",
+    desc: "Réglez vos frais d'inscription (25 000 FCFA) par MoMo, Moov Money, carte ou au guichet pour réserver votre place.",
+    meta: "Paiement sécurisé",
+  },
+  {
+    n: "04",
+    title: "Accès & rentrée",
+    desc: "Téléchargez votre reçu certifié, votre attestation, et intégrez le groupe de votre promotion pour démarrer.",
+    meta: "Accès immédiat",
+  },
+];
+
+const faqs = [
+  {
+    q: "Quelles sont les conditions de diplôme pour intégrer FuturCraft ?",
+    a: "La majorité de nos formations sont ouvertes à partir du niveau BEPC ou Baccalauréat. Pour la filière Intelligence Artificielle avancée, un profil scientifique ou une appétence pour les mathématiques est recommandé.",
+  },
+  {
+    q: "Peut-on payer la scolarité en plusieurs fois ?",
+    a: "Absolument. Chaque cursus dispose d'un échéancier en 3 à 5 mensualités personnalisées. Le premier versement correspond aux frais d'inscription de 25 000 FCFA.",
+  },
+  {
+    q: "Quels moyens de paiement sont acceptés au Bénin ?",
+    a: "Nous acceptons MTN Mobile Money, Moov Money, les cartes bancaires Visa/Mastercard ainsi que les règlements en espèces à la caisse de notre campus de Godomey (Cotonou).",
+  },
+  {
+    q: "Faut-il obligatoirement son propre ordinateur ?",
+    a: "Un ordinateur personnel est fortement recommandé pour pratiquer chez vous. Cependant, nos laboratoires informatiques sont entièrement équipés et en libre accès pour les étudiants inscrits.",
+  },
+];
+
 export default async function AdmissionsPage() {
   const formations = await getFormations();
-
-  const steps = [
-    {
-      num: "01",
-      title: "Exploration & Choix",
-      desc: "Découvrez notre catalogue de 12 formations. Contactez un conseiller si vous hésitez sur votre orientation.",
-      icon: GraduationCap,
-      color: "from-blue-500 to-indigo-600",
-      highlight: "Catalogue gratuit",
-    },
-    {
-      num: "02",
-      title: "Candidature en ligne",
-      desc: "Remplissez le formulaire en quelques minutes et obtenez instantanément votre numéro de dossier unique.",
-      icon: CheckCircle2,
-      color: "from-violet-500 to-purple-600",
-      highlight: "Réponse instantanée",
-    },
-    {
-      num: "03",
-      title: "Validation & Paiement",
-      desc: "Réglez vos frais d'inscription (25 000 FCFA) par MoMo, Moov Money ou au guichet pour réserver votre place.",
-      icon: CreditCard,
-      color: "from-emerald-500 to-teal-600",
-      highlight: "Paiement sécurisé",
-    },
-    {
-      num: "04",
-      title: "Accès & Rentrée",
-      desc: "Téléchargez votre reçu certifié, votre attestation et intégrez le groupe de promotion pour démarrer.",
-      icon: Star,
-      color: "from-amber-500 to-orange-600",
-      highlight: "Accès immédiat",
-    },
-  ];
-
-  const faqs = [
-    {
-      q: "Quelles sont les conditions de diplôme pour intégrer FuturCraft ?",
-      a: "La majorité de nos formations sont ouvertes à partir du niveau BEPC ou Baccalauréat. Pour la filière Intelligence Artificielle Avancée, un profil scientifique ou une appétence mathématique est recommandé.",
-    },
-    {
-      q: "Peut-on payer la scolarité en plusieurs fois ?",
-      a: "Absolument. Chaque cursus dispose d'un échéancier en 3 à 5 mensualités personnalisées. Le premier versement correspond aux frais d'inscription de 25 000 FCFA.",
-    },
-    {
-      q: "Quels moyens de paiement sont acceptés au Bénin ?",
-      a: "Nous acceptons MTN Mobile Money, Moov Money, les cartes bancaires Visa/Mastercard ainsi que les règlements en espèces à la caisse de notre campus de Godomey (Cotonou).",
-    },
-    {
-      q: "Faut-il obligatoirement son propre ordinateur ?",
-      a: "Un ordinateur personnel est fortement recommandé pour pratiquer chez vous. Cependant, nos laboratoires informatiques sont entièrement équipés et en libre accès pour nos étudiants inscrits.",
-    },
-  ];
 
   const faqJsonLd = {
     "@context": "https://schema.org",
@@ -90,259 +74,166 @@ export default async function AdmissionsPage() {
     })),
   };
 
-  const formatPrice = (price: number) =>
-    new Intl.NumberFormat("fr-FR").format(price).replace(/\u202f/g, " ");
-
   return (
-    <div className="min-h-screen bg-[#f8faff]">
+    <div className="bg-paper">
+      <PageHero
+        eyebrow="Admissions ouvertes — Session 2026"
+        title={
+          <>
+            Simple, transparent,
+            <br />
+            <span className="serif-accent font-normal text-brand-700">sans frais cachés.</span>
+          </>
+        }
+        description="Une formation d'excellence accessible à tous : tarifs fermes en FCFA, paiement échelonné pour chaque cursus, et un processus 100 % digital du dossier au reçu certifié."
+        aside={
+          <div className="flex flex-wrap gap-3">
+            <Link href="/inscription" className="btn btn-ink">
+              Démarrer mon inscription
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+            <a href="#tarifs" className="btn btn-outline">
+              Voir les tarifs
+            </a>
+          </div>
+        }
+      />
 
-      {/* Hero */}
-      <section className="relative bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-grid-dark opacity-15 pointer-events-none" />
-        <div className="absolute right-0 top-0 w-[500px] h-[500px] rounded-full bg-blue-600/15 blur-[120px] pointer-events-none" />
-        <div className="h-0.5 bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+      {/* Étapes */}
+      <section className="border-b border-ink bg-paper">
+        <div className="wrap py-20 lg:py-28">
+          <SectionHeading
+            index="01"
+            eyebrow="Parcours d'admission"
+            title="Quatre étapes, aucune paperasse."
+            description="Le processus est entièrement digitalisé, du choix de la filière à la remise du reçu certifié."
+          />
+          <ol className="mt-14 grid gap-px border border-ink bg-ink md:grid-cols-2 xl:grid-cols-4">
+            {steps.map((s) => (
+              <li key={s.n} className="flex flex-col bg-paper p-7 lg:min-h-[320px] lg:p-8">
+                <div className="flex items-start justify-between">
+                  <p className="numeral text-6xl text-ink lg:text-7xl">{s.n}</p>
+                  <span className="tag text-ink/60">{s.meta}</span>
+                </div>
+                <h3 className="display-sm mt-auto pt-10 text-ink">{s.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-ink/65">{s.desc}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 text-center">
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-emerald-400/40 bg-emerald-500/10 text-emerald-200 text-xs font-bold mb-8 animate-fade-up">
-            <BadgeCheck className="w-3.5 h-3.5 text-emerald-400" />
-            Admissions Ouvertes — Session 2026 · Inscriptions en cours
+      {/* Grille tarifaire */}
+      <section id="tarifs" className="scroll-mt-32 border-b border-ink bg-paper-100">
+        <div className="wrap py-20 lg:py-28">
+          <SectionHeading
+            index="02"
+            eyebrow="Grille tarifaire officielle"
+            title={
+              <>
+                Frais & <span className="serif-accent font-normal text-brand-700">échéanciers.</span>
+              </>
+            }
+            description="Tous nos tarifs sont fermes et transparents. Les frais de dossier sont inclus dans le coût global, le solde est réparti en mensualités."
+          />
+
+          <div className="mt-14 overflow-x-auto border border-ink bg-paper">
+            <table className="w-full min-w-[820px] text-left text-sm">
+              <thead>
+                <tr className="border-b-2 border-ink text-[10px] font-bold uppercase tracking-[0.2em] text-ink/55">
+                  <th className="px-5 py-4 font-bold">#</th>
+                  <th className="px-5 py-4 font-bold">Formation</th>
+                  <th className="px-5 py-4 font-bold">Durée</th>
+                  <th className="px-5 py-4 font-bold">Dossier</th>
+                  <th className="px-5 py-4 font-bold">Coût global</th>
+                  <th className="px-5 py-4 font-bold">Facilité</th>
+                  <th className="px-5 py-4 text-right font-bold">Action</th>
+                </tr>
+              </thead>
+              <tbody className="pricing-table divide-y divide-ink/15">
+                {formations.map((f, i) => (
+                  <tr key={f.id} className="group transition-colors">
+                    <td className="numeral px-5 py-4 text-base text-ink/35">{String(i + 1).padStart(2, "0")}</td>
+                    <td className="px-5 py-4">
+                      <Link href={`/formation/${f.slug}`} className="font-display text-base font-bold text-ink hover:text-brand-700">
+                        {f.title}
+                      </Link>
+                      <p className="mt-0.5 text-[11px] uppercase tracking-[0.14em] text-ink/50">{f.category}</p>
+                    </td>
+                    <td className="px-5 py-4 text-ink/75">{f.duration.split(" (")[0]}</td>
+                    <td className="px-5 py-4 text-ink/75">{formatPrice(f.registrationFee)} F</td>
+                    <td className="px-5 py-4 font-display text-base font-bold text-ink">{formatPrice(f.price)} FCFA</td>
+                    <td className="px-5 py-4">
+                      <span className="tag border-brand-700 text-brand-700">{f.installmentsCount} tranches</span>
+                    </td>
+                    <td className="px-5 py-4 text-right">
+                      <Link href={`/inscription?formationId=${f.id}`} className="btn btn-ink btn-sm">
+                        Candidater
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          <h1 className="animate-fade-up delay-100 font-display text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight">
-            Admissions &
-            <span className="block text-gradient-brand mt-1">Modalités Financières</span>
-          </h1>
-
-          <p className="animate-fade-up delay-200 mt-6 text-blue-200/70 text-lg max-w-2xl mx-auto leading-8">
-            Une formation d&apos;excellence accessible à tous, avec des tarifs
-            transparents en FCFA et des facilités de paiement échelonné.
-          </p>
-
-          {/* Quick info pills */}
-          <div className="animate-fade-up delay-300 mt-10 flex flex-wrap justify-center gap-3">
+          <div className="mt-8 grid gap-px border border-ink bg-ink sm:grid-cols-3">
             {[
-              { icon: Clock, text: "Inscription en 5 min" },
-              { icon: MapPin, text: "Campus Godomey, Cotonou" },
-              { icon: Smartphone, text: "Paiement MoMo accepté" },
-              { icon: ShieldCheck, text: "Reçu numérique sécurisé" },
-            ].map(({ icon: Icon, text }) => (
-              <span key={text} className="inline-flex items-center gap-2 px-4 py-2 rounded-xl glass border-white/10 text-sm text-white/70 font-medium">
-                <Icon className="w-4 h-4 text-blue-300 shrink-0" />
-                {text}
-              </span>
+              { icon: Smartphone, title: "Mobile Money", text: "MTN MoMo et Moov Money, confirmation immédiate." },
+              { icon: CreditCard, title: "Carte bancaire", text: "Visa et Mastercard, paiement sécurisé en ligne." },
+              { icon: Banknote, title: "Caisse du campus", text: "Espèces ou dépôt au guichet, reçu certifié remis sur place." },
+            ].map(({ icon: Icon, title, text }) => (
+              <div key={title} className="flex items-start gap-4 bg-paper p-6">
+                <Icon className="mt-0.5 h-5 w-5 shrink-0 text-brand-700" />
+                <div>
+                  <p className="font-display text-base font-bold text-ink">{title}</p>
+                  <p className="mt-1 text-sm leading-6 text-ink/65">{text}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
-
-        <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#f8faff] to-transparent pointer-events-none" />
       </section>
 
-      {/* ── 4 Steps ── */}
-      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-14">
-          <div className="badge-brand mb-5 mx-auto w-fit">
-            <Sparkles className="w-3 h-3" />
-            Parcours d&apos;Admission
-          </div>
-          <h2 className="font-display text-3xl sm:text-4xl font-black text-slate-950">
-            Comment rejoindre FuturCraft
-            <span className="block text-gradient-brand">en 4 étapes ?</span>
-          </h2>
-          <p className="mt-4 text-slate-500 text-base leading-7">
-            Un processus simple, rapide et entièrement digitalisé.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {steps.map((st, i) => {
-            const Icon = st.icon;
-            return (
-              <div
-                key={i}
-                className="relative p-7 rounded-3xl bg-white border border-slate-200 shadow-sm card-hover group hover:border-blue-200"
-              >
-                {/* Connector line */}
-                {i < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-10 right-0 translate-x-1/2 w-6 h-0.5 bg-gradient-to-r from-slate-200 to-slate-100 z-10" />
-                )}
-
-                {/* Step number */}
-                <span className="font-display text-5xl font-black text-slate-100 group-hover:text-blue-100 transition-colors absolute top-5 right-5 leading-none pointer-events-none">
-                  {st.num}
-                </span>
-
-                {/* Icon */}
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${st.color} flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon className="w-6 h-6 text-white" />
-                </div>
-
-                {/* Badge */}
-                <span className="inline-flex items-center px-2.5 py-1 rounded-lg bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-wide mb-3">
-                  {st.highlight}
-                </span>
-
-                <h3 className="font-display text-lg font-bold text-slate-900 mb-2">{st.title}</h3>
-                <p className="text-sm text-slate-500 leading-7">{st.desc}</p>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* CTA under steps */}
-        <div className="mt-12 flex justify-center">
-          <Link
-            href="/inscription"
-            className="btn-primary"
-          >
-            Démarrer mon inscription
-            <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-      </section>
-
-      {/* ── Pricing Table ── */}
-      <section className="py-20 bg-white border-y border-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="text-center max-w-2xl mx-auto">
-            <div className="badge-brand mb-5 mx-auto w-fit" style={{ background: 'linear-gradient(135deg, #f0fdf4, #dcfce7)', color: '#065f46', borderColor: 'rgba(16,185,129,0.2)' }}>
-              <ShieldCheck className="w-3 h-3" />
-              Transparence totale
-            </div>
-            <h2 className="font-display text-3xl sm:text-4xl font-black text-slate-950">
-              Grille Tarifaire Officielle
-              <span className="block text-gradient-brand">Frais & Échéanciers</span>
-            </h2>
-            <p className="mt-4 text-slate-500 text-sm leading-7">
-              Tous nos tarifs sont fermes, transparents et sans frais cachés.
-              Paiement échelonné disponible pour chaque formation.
+      {/* FAQ */}
+      <section className="border-b border-ink bg-paper">
+        <div className="wrap grid gap-12 py-20 lg:grid-cols-12 lg:py-28">
+          <div className="lg:col-span-4">
+            <p className="eyebrow text-brand-700">
+              <span className="tabular-nums">03</span>
+              <span className="text-ink/30">/</span>
+              FAQ
             </p>
-          </div>
-
-          {/* Table card */}
-          <div className="rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-900/5 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead>
-                  <tr className="bg-gradient-to-r from-slate-950 to-blue-950 text-white">
-                    <th className="py-4 px-5 font-semibold text-[11px] uppercase tracking-widest text-white/70">Formation</th>
-                    <th className="py-4 px-5 font-semibold text-[11px] uppercase tracking-widest text-white/70">Filière</th>
-                    <th className="py-4 px-5 font-semibold text-[11px] uppercase tracking-widest text-white/70">Durée</th>
-                    <th className="py-4 px-5 font-semibold text-[11px] uppercase tracking-widest text-white/70">Dossier</th>
-                    <th className="py-4 px-5 font-semibold text-[11px] uppercase tracking-widest text-white/70">Total (FCFA)</th>
-                    <th className="py-4 px-5 font-semibold text-[11px] uppercase tracking-widest text-white/70">Facilité</th>
-                    <th className="py-4 px-5 font-semibold text-[11px] uppercase tracking-widest text-white/70 text-right">Action</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 pricing-table">
-                  {formations.map((f, i) => (
-                    <tr key={f.id} className="hover:bg-blue-50/40 transition-colors group">
-                      <td className="py-4 px-5 font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
-                        {f.title}
-                      </td>
-                      <td className="py-4 px-5">
-                        <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 font-medium text-[11px]">
-                          {f.category}
-                        </span>
-                      </td>
-                      <td className="py-4 px-5 text-slate-600">{f.duration}</td>
-                      <td className="py-4 px-5 text-slate-600 font-medium">
-                        {formatPrice(f.registrationFee)} F
-                      </td>
-                      <td className="py-4 px-5">
-                        <span className="font-black text-slate-950 text-sm">
-                          {formatPrice(f.price)} FCFA
-                        </span>
-                      </td>
-                      <td className="py-4 px-5">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 font-bold text-[11px] border border-emerald-200">
-                          <CheckCircle2 className="w-3 h-3" />
-                          {f.installmentsCount} tranches
-                        </span>
-                      </td>
-                      <td className="py-4 px-5 text-right">
-                        <Link
-                          href={`/inscription?formationId=${f.id}`}
-                          className="inline-flex items-center gap-1 px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-sm hover:shadow-md hover:shadow-blue-500/20"
-                        >
-                          Candidater
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Table footer */}
-            <div className="border-t border-slate-100 bg-slate-50/50 px-5 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="flex flex-wrap gap-3 text-xs text-slate-500">
-                <span className="flex items-center gap-1.5">
-                  <Smartphone className="w-3.5 h-3.5 text-yellow-500" />
-                  MTN MoMo accepté
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Smartphone className="w-3.5 h-3.5 text-blue-500" />
-                  Moov Money accepté
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <CreditCard className="w-3.5 h-3.5 text-slate-400" />
-                  Carte Visa/Mastercard
-                </span>
-              </div>
-              <Link
-                href="/inscription"
-                className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
-              >
-                S&apos;inscrire maintenant <ArrowRight className="w-3 h-3" />
+            <h2 className="display-md mt-5 text-ink">Questions fréquentes</h2>
+            <p className="mt-5 text-base leading-7 text-ink/65">
+              Tout ce que les futurs étudiants et leurs parents souhaitent savoir avant de s&apos;inscrire.
+            </p>
+            <div className="mt-8 flex flex-col items-start gap-3">
+              <Link href="/contact" className="btn btn-outline">
+                Contacter un conseiller
               </Link>
             </div>
           </div>
+          <div className="lg:col-span-8">
+            <FAQAccordion faqs={faqs} />
+          </div>
         </div>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       </section>
 
-      {/* ── FAQ ── */}
-      <section className="py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-14">
-          <div className="badge-brand mb-5 mx-auto w-fit">
-            FAQ
-          </div>
-          <h2 className="font-display text-3xl sm:text-4xl font-black text-slate-950">
-            Questions Fréquentes
+      {/* CTA */}
+      <section className="bg-ink text-paper">
+        <div className="wrap flex flex-col gap-8 py-16 lg:flex-row lg:items-center lg:justify-between lg:py-20">
+          <h2 className="display-md max-w-2xl">
+            Votre place se réserve en{" "}
+            <span className="serif-accent font-normal text-accent-400">cinq minutes.</span>
           </h2>
-          <p className="mt-4 text-slate-500 max-w-xl mx-auto text-sm leading-7">
-            Tout ce que les futurs étudiants et parents souhaitent savoir
-            avant de s&apos;inscrire à FuturCraft Institut.
-          </p>
+          <Link href="/inscription" className="btn btn-accent btn-lg shrink-0">
+            Démarrer mon inscription
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
         </div>
-
-        <div className="space-y-3">
-          <FAQAccordion faqs={faqs} />
-        </div>
-
-        <div className="text-center mt-14 space-y-4">
-          <p className="text-slate-500 text-sm">Une question non listée ici ?</p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all"
-            >
-              Contacter un conseiller
-            </Link>
-            <Link
-              href="/inscription"
-              className="btn-primary"
-            >
-              Démarrer mon inscription
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-        />
       </section>
     </div>
   );
