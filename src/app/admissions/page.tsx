@@ -137,7 +137,45 @@ export default async function AdmissionsPage() {
             description="Tous nos tarifs sont fermes et transparents. Les frais de dossier sont inclus dans le coût global, le solde est réparti en mensualités."
           />
 
-          <div className="mt-14 overflow-x-auto border border-ink bg-paper">
+          {/* Version mobile : liste de cartes */}
+          <ol className="grid-lines mt-14 grid md:hidden">
+            {formations.map((f, i) => (
+              <li key={f.id} className="bg-paper p-5">
+                <div className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/50">
+                      {String(i + 1).padStart(2, "0")} · {f.category}
+                    </p>
+                    <Link href={`/formation/${f.slug}`} className="display-sm mt-2 block text-ink">
+                      {f.title}
+                    </Link>
+                  </div>
+                  <span className="tag shrink-0 border-brand-700 text-brand-700">{f.installmentsCount} tranches</span>
+                </div>
+                <dl className="mt-4 grid grid-cols-3 gap-3 border-t border-ink/10 pt-4 text-sm">
+                  <div>
+                    <dt className="text-[10px] font-bold uppercase tracking-[0.16em] text-ink/45">Durée</dt>
+                    <dd className="mt-1 font-semibold text-ink">{f.duration.split(" (")[0]}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-[10px] font-bold uppercase tracking-[0.16em] text-ink/45">Dossier</dt>
+                    <dd className="mt-1 font-semibold text-ink">{formatPrice(f.registrationFee)} F</dd>
+                  </div>
+                  <div>
+                    <dt className="text-[10px] font-bold uppercase tracking-[0.16em] text-ink/45">Coût global</dt>
+                    <dd className="mt-1 font-display text-base font-bold text-ink">{formatPrice(f.price)} F</dd>
+                  </div>
+                </dl>
+                <Link href={`/inscription?formationId=${f.id}`} className="btn btn-ink btn-sm mt-5 w-full">
+                  Candidater
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </Link>
+              </li>
+            ))}
+          </ol>
+
+          {/* Version bureau : tableau */}
+          <div className="mt-14 hidden overflow-x-auto border border-ink bg-paper md:block">
             <table className="w-full min-w-[820px] text-left text-sm">
               <thead>
                 <tr className="border-b-2 border-ink text-[10px] font-bold uppercase tracking-[0.2em] text-ink/55">
