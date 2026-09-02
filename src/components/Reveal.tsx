@@ -2,9 +2,11 @@
 
 import { useEffect, useRef, useState, type ReactNode, type ElementType } from "react";
 
-const visibleClass = "opacity-100 translate-y-0";
-const hiddenClass = "opacity-0 translate-y-5";
-
+/**
+ * Apparition au défilement (amélioration progressive).
+ * Le style repose sur la classe `.reveal` de globals.css : sans JavaScript
+ * ou avec `prefers-reduced-motion`, le contenu est affiché directement.
+ */
 export function Reveal({
   children,
   delay = 0,
@@ -17,14 +19,12 @@ export function Reveal({
   as?: ElementType;
 }) {
   const ref = useRef<HTMLElement | null>(null);
-  // Visible par défaut si IntersectionObserver n'est pas disponible (SEO / anciens navigateurs)
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const node = ref.current;
     if (!node) return;
     if (typeof IntersectionObserver === "undefined") {
-      // Pas d'observer disponible : afficher immédiatement (via un tick pour éviter setState synchrone)
       const t = setTimeout(() => setVisible(true), 0);
       return () => clearTimeout(t);
     }
@@ -48,10 +48,8 @@ export function Reveal({
   return (
     <Comp
       ref={ref}
-      style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform motion-reduce:transition-none motion-reduce:opacity-100 motion-reduce:translate-y-0 ${
-        visible ? visibleClass : hiddenClass
-      } ${className}`}
+      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+      className={`reveal ${visible ? "is-visible" : ""} ${className}`.trim()}
     >
       {children}
     </Comp>

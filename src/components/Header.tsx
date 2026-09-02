@@ -67,6 +67,16 @@ export function Header() {
     };
   }, [mobileOpen]);
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      setMegaOpen(false);
+      setMobileOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
   const isActive = (href: string) =>
     pathname === href ||
     (href !== "/" && pathname.startsWith(href)) ||
@@ -133,10 +143,16 @@ export function Header() {
                     className="relative"
                     onMouseEnter={() => setMegaOpen(true)}
                     onMouseLeave={() => setMegaOpen(false)}
+                    onFocus={() => setMegaOpen(true)}
+                    onBlur={(e) => {
+                      if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setMegaOpen(false);
+                    }}
                   >
                     <Link
                       href={link.href}
                       aria-current={active ? "page" : undefined}
+                      aria-expanded={megaOpen}
+                      aria-haspopup="true"
                       className={`link-underline flex items-center gap-1 py-2 text-[13.5px] font-semibold ${
                         active ? "text-brand-700" : "text-ink"
                       }`}
@@ -234,6 +250,7 @@ export function Header() {
               className="flex h-11 w-11 items-center justify-center border border-ink bg-paper text-ink transition-colors hover:bg-ink hover:text-paper"
               aria-label={mobileOpen ? "Fermer le menu" : "Ouvrir le menu"}
               aria-expanded={mobileOpen}
+              aria-controls="menu-mobile"
             >
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
@@ -243,10 +260,12 @@ export function Header() {
 
       {/* Menu mobile plein écran */}
       <div
+        id="menu-mobile"
         className={`fixed inset-0 z-40 bg-ink text-paper transition-all duration-300 xl:hidden ${
           mobileOpen ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         }`}
         aria-hidden={!mobileOpen}
+        inert={!mobileOpen}
       >
         <div className="flex h-full flex-col overflow-y-auto pt-[72px]">
           <nav className="wrap flex-1 py-8" aria-label="Navigation mobile">

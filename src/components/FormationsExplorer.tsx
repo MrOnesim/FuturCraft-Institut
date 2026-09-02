@@ -232,16 +232,16 @@ export function FormationsExplorer({ formations }: { formations: Formation[] }) 
                   <h3 className="display-sm mt-2">{f.title}</h3>
                 </div>
                 <div className="hidden text-sm lg:col-span-2 lg:block">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/40 group-hover:text-paper/40">Durée</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/55 group-hover:text-paper/55">Durée</p>
                   <p className="mt-1 font-semibold">{shortDuration(f.duration)}</p>
                 </div>
                 <div className="hidden text-sm lg:col-span-2 lg:block">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/40 group-hover:text-paper/40">Niveau</p>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/55 group-hover:text-paper/55">Niveau</p>
                   <p className="mt-1 font-semibold">{f.level.split(" (")[0]}</p>
                 </div>
                 <div className="flex items-center justify-between gap-4 px-1 sm:col-span-5 sm:px-2 lg:col-span-2 lg:justify-end">
                   <div className="lg:text-right">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/40 group-hover:text-paper/40">Tarif</p>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/55 group-hover:text-paper/55">Tarif</p>
                     <p className="mt-1 font-display text-lg font-bold">{formatPrice(f.price)} FCFA</p>
                   </div>
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center border border-ink transition-colors group-hover:border-accent-400 group-hover:bg-accent-400 group-hover:text-ink">

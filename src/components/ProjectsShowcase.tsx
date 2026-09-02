@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ExternalLink, Code2, X, ArrowUpRight } from "lucide-react";
 
@@ -40,12 +40,26 @@ function initials(name: string) {
 export function ProjectsShowcase({ projects }: { projects: ProjectItem[] }) {
   const [selectedCategory, setSelectedCategory] = useState<string>("Tous");
   const [active, setActive] = useState<ProjectItem | null>(null);
+  const closeBtnRef = useRef<HTMLButtonElement | null>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
+
+  const openProject = (proj: ProjectItem, opener?: HTMLElement | null) => {
+    openerRef.current = opener ?? (document.activeElement as HTMLElement | null);
+    setActive(proj);
+  };
+  const closeProject = () => {
+    setActive(null);
+    openerRef.current?.focus();
+  };
 
   useEffect(() => {
     if (!active) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setActive(null);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeProject();
+    };
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
+    closeBtnRef.current?.focus();
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
@@ -105,7 +119,7 @@ export function ProjectsShowcase({ projects }: { projects: ProjectItem[] }) {
             return (
               <article key={proj.id} className="group flex flex-col bg-paper">
                 <button
-                  onClick={() => setActive(proj)}
+                  onClick={(e) => openProject(proj, e.currentTarget)}
                   className="relative block aspect-[16/10] w-full overflow-hidden border-b border-ink bg-ink/5 text-left"
                   aria-label={`Voir les détails de ${proj.title}`}
                 >
@@ -124,7 +138,7 @@ export function ProjectsShowcase({ projects }: { projects: ProjectItem[] }) {
 
                 <div className="flex flex-1 flex-col p-6">
                   <h3 className="display-sm text-ink">
-                    <button onClick={() => setActive(proj)} className="text-left hover:text-brand-700">
+                    <button onClick={(e) => openProject(proj, e.currentTarget)} className="text-left hover:text-brand-700">
                       {proj.title}
                     </button>
                   </h3>
@@ -158,7 +172,7 @@ export function ProjectsShowcase({ projects }: { projects: ProjectItem[] }) {
                         </span>
                       </span>
                     </div>
-                    <button onClick={() => setActive(proj)} className="arrow-link text-xs uppercase tracking-[0.14em] text-ink">
+                    <button onClick={(e) => openProject(proj, e.currentTarget)} className="arrow-link text-xs uppercase tracking-[0.14em] text-ink">
                       Détails <ArrowUpRight className="h-3.5 w-3.5" />
                     </button>
                   </div>
@@ -173,7 +187,7 @@ export function ProjectsShowcase({ projects }: { projects: ProjectItem[] }) {
       {active && (
         <div
           className="fixed inset-0 z-[60] flex items-end justify-center bg-ink/70 p-0 backdrop-blur-sm sm:items-center sm:p-6"
-          onClick={() => setActive(null)}
+          onClick={closeProject}
           role="dialog"
           aria-modal="true"
           aria-labelledby="project-modal-title"
@@ -191,7 +205,8 @@ export function ProjectsShowcase({ projects }: { projects: ProjectItem[] }) {
                 className="object-cover"
               />
               <button
-                onClick={() => setActive(null)}
+                ref={closeBtnRef}
+                onClick={closeProject}
                 className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center border border-paper bg-ink text-paper transition-colors hover:bg-paper hover:text-ink"
                 aria-label="Fermer"
               >
@@ -261,7 +276,7 @@ export function ProjectsShowcase({ projects }: { projects: ProjectItem[] }) {
                     Code source
                   </a>
                 )}
-                <button onClick={() => setActive(null)} className="ml-auto text-sm font-semibold text-ink/60 hover:text-ink">
+                <button onClick={closeProject} className="ml-auto text-sm font-semibold text-ink/60 hover:text-ink">
                   Fermer
                 </button>
               </div>

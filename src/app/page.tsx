@@ -282,14 +282,14 @@ export default async function HomePage() {
                     </p>
                   </div>
                   <div className="hidden text-sm text-ink/65 group-hover:text-paper/70 lg:col-span-2 lg:block">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/40 group-hover:text-paper/40">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/55 group-hover:text-paper/55">
                       Durée
                     </p>
                     <p className="mt-1 font-semibold">{f.duration.split(" (")[0]}</p>
                   </div>
                   <div className="flex items-center justify-between gap-4 px-1 sm:col-span-4 sm:px-2 lg:col-span-2 lg:justify-end">
                     <div className="lg:text-right">
-                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/40 group-hover:text-paper/40">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/55 group-hover:text-paper/55">
                         Tarif
                       </p>
                       <p className="mt-1 font-display text-lg font-bold">{formatPrice(f.price)} FCFA</p>
