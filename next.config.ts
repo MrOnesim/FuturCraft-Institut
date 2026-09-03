@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Autorise le rechargement à chaud (HMR) depuis les aperçus distants en développement.
+  allowedDevOrigins: ["*.e2b.app"],
 };
 
 export default nextConfig;

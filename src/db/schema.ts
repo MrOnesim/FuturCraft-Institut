@@ -171,6 +171,29 @@ export const events = pgTable("events", {
   attendeesCount: integer("attendees_count").default(0),
 });
 
+// Demandes entrantes du site public : formulaire de contact, inscriptions à un
+// événement (subject = "Inscription événement", context = titre de l'événement)…
+export const contactMessages = pgTable("contact_messages", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email"), // facultatif pour les inscriptions événement (téléphone prioritaire)
+  phone: text("phone").notNull(),
+  subject: text("subject").notNull(),
+  context: text("context"), // ex. titre d'un événement, slug d'une formation
+  message: text("message").notNull(),
+  source: text("source"), // chemin de la page d'origine (ex. /contact, /evenements/…)
+  status: text("status").notNull().default("nouveau"), // 'nouveau' | 'traite'
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const newsletterSubscribers = pgTable("newsletter_subscribers", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  source: text("source"), // ex. accueil, actualites
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  unsubscribedAt: timestamp("unsubscribed_at"),
+});
+
 export const blogArticles = pgTable("blog_articles", {
   id: serial("id").primaryKey(),
   slug: text("slug").notNull().unique(),

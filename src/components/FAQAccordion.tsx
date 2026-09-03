@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { HelpCircle, ChevronDown } from "lucide-react";
+import { Plus } from "lucide-react";
 
 interface FaqItem {
   q: string;
@@ -11,46 +11,50 @@ interface FaqItem {
 export function FAQAccordion({
   faqs,
   openDefault = 0,
+  tone = "light",
 }: {
   faqs: FaqItem[];
   openDefault?: number;
+  tone?: "light" | "dark";
 }) {
   const [openIndex, setOpenIndex] = useState<number | null>(
     openDefault >= 0 && openDefault < faqs.length ? openDefault : null
   );
+  const dark = tone === "dark";
 
   return (
-    <div className="space-y-3">
+    <div className={`border-t-2 ${dark ? "border-paper" : "border-ink"}`}>
       {faqs.map((faq, i) => {
         const isOpen = openIndex === i;
         return (
-          <div
-            key={i}
-            className={`rounded-2xl bg-white border shadow-xs overflow-hidden transition-colors ${
-              isOpen ? "border-blue-300 ring-1 ring-blue-100" : "border-slate-200"
-            }`}
-          >
+          <div key={i} className={`border-b ${dark ? "border-paper/25" : "border-ink"}`}>
             <button
               type="button"
               onClick={() => setOpenIndex(isOpen ? null : i)}
               aria-expanded={isOpen}
               aria-controls={`faq-panel-${i}`}
-              className="w-full flex items-center justify-between gap-4 px-5 py-4 text-left"
+              className="flex w-full items-start justify-between gap-6 py-5 text-left"
             >
-              <span className="flex items-center gap-3">
-                <HelpCircle
-                  className={`w-5 h-5 shrink-0 ${isOpen ? "text-blue-600" : "text-slate-400"}`}
-                />
-                <span className="text-sm font-bold text-slate-900">{faq.q}</span>
+              <span className="flex items-start gap-5">
+                <span className={`numeral mt-1 text-sm ${dark ? "text-paper/40" : "text-ink/35"}`}>
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <span className={`font-display text-lg font-bold leading-snug sm:text-xl ${dark ? "text-paper" : "text-ink"}`}>
+                  {faq.q}
+                </span>
               </span>
               <span
-                className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center transition-all ${
+                className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center border transition-all duration-300 ${
                   isOpen
-                    ? "bg-blue-600 text-white rotate-180"
-                    : "bg-slate-100 text-slate-500"
+                    ? dark
+                      ? "rotate-45 border-accent-400 bg-accent-400 text-ink"
+                      : "rotate-45 border-ink bg-ink text-paper"
+                    : dark
+                      ? "border-paper/40 text-paper"
+                      : "border-ink text-ink"
                 }`}
               >
-                <ChevronDown className="w-4 h-4" />
+                <Plus className="h-4 w-4" />
               </span>
             </button>
             <div
@@ -60,8 +64,8 @@ export function FAQAccordion({
                 isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
               }`}
             >
-              <div className="overflow-hidden min-h-0">
-                <p className="pl-13 pr-5 pb-4 text-sm leading-relaxed text-slate-600">
+              <div className="min-h-0 overflow-hidden">
+                <p className={`pb-6 pl-[calc(1.25rem+1.75rem)] pr-14 text-sm leading-7 sm:text-base ${dark ? "text-paper/70" : "text-ink/70"}`}>
                   {faq.a}
                 </p>
               </div>

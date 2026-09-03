@@ -1,501 +1,531 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-    ArrowRight,
-    CheckCircle2,
-    GraduationCap,
-    MapPin,
-    Play,
-    Rocket,
-    Users,
-} from "lucide-react";
-import { getFormations } from "@/lib/data-service";
+import { ArrowUpRight, ArrowRight, Quote } from "lucide-react";
+import { getFormations, getProjects } from "@/lib/data-service";
 import { Reveal } from "@/components/Reveal";
 import { StatCounter } from "@/components/StatCounter";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { RotatingBadge } from "@/components/RotatingBadge";
+import { SectionHeading } from "@/components/SectionHeading";
+
+export const dynamic = "force-dynamic";
 
 const formatPrice = (price: number) =>
-    new Intl.NumberFormat("fr-FR").format(price).replace(/\u202f/g, " ");
+  new Intl.NumberFormat("fr-FR").format(price).replace(/\u202f/g, " ");
 
-const partnerCompanies = [
-    "FuturCraft Institut et Programme Futur",
-    "Startups tech béninoises",
-    "Agences de développement web/mobile",
-    "Cabinets marketing digital",
-    "Imprimeries / ateliers de sérigraphie",
-    "Sociétés de maintenance informatique à Cotonou",
-    "Sociétés de maintenance informatique à Abomey-Calavi",
+const marqueeItems = [
+  "Développement Web",
+  "Intelligence Artificielle",
+  "UI/UX Design",
+  "Pilotage de Drone",
+  "Marketing Digital",
+  "Sérigraphie",
+  "Audiovisuel",
+  "Maintenance & Réseau",
+  "E-commerce",
+  "Copywriting",
+];
+
+const pillars = [
+  {
+    n: "01",
+    title: "80 % de pratique",
+    text: "Chaque module se termine par une réalisation concrète. Pas de diplôme sans projet fonctionnel, présenté devant un jury.",
+  },
+  {
+    n: "02",
+    title: "Des mentors en activité",
+    text: "Développeurs, designers, marketeurs et télépilotes en poste, qui enseignent ce qu'ils font au quotidien.",
+  },
+  {
+    n: "03",
+    title: "Cohortes limitées",
+    text: "Des promotions à taille humaine pour un suivi individuel, du premier jour jusqu'à l'insertion professionnelle.",
+  },
+  {
+    n: "04",
+    title: "Un réseau qui recrute",
+    text: "Startups, agences et entreprises partenaires à Cotonou et Abomey-Calavi accueillent nos apprenants en stage et en emploi.",
+  },
 ];
 
 const testimonials = [
-    {
-        name: "Carmel DANGBEGNON",
-        role: "Prompt Engineer",
-        avatar: "/images/carmel.jpg",
-        quote:
-            "Grâce à FuturCraft Institut, j'ai ma sœur qui a pu acquérir des compétences concrètes et trouver un emploi rapidement. Les formateurs sont passionnés et toujours à l'écoute.",
-    },
-    {
-        name: "Président DJANGOUN",
-        role: "Entrepreneur digital / Étudiant",
-        avatar: "/images/president.jpg",
-        quote:
-            "FuturCraft offre un cadre dynamique, une pédagogie axée sur la pratique et un accompagnement qui fait vraiment la différence dans le parcours des apprenants.",
-    },
-    {
-        name: "William ZOMANHOUN",
-        role: "Développeur web",
-        avatar: "/images/wiliam.jpg",
-        quote:
-            "Les projets concrets m'ont permis de progresser rapidement et de prendre confiance. J'ai appris à travailler comme dans une véritable équipe produit.",
-    },
-    {
-        name: "Carlos HOUESSINON",
-        role: "Graphiste & UI/UX Designer",
-        avatar: "/images/houessinon.jpg",
-        quote:
-            "Une formation accessible et exigeante, portée par des intervenants toujours disponibles. Chaque cours nous rapproche un peu plus du monde professionnel.",
-    },
-    {
-        name: "Nicodème ATAKOUN",
-        role: "Spécialiste Marketing digital",
-        avatar: "/images/nicodem.jpg",
-        quote:
-            "J'ai trouvé à FuturCraft une communauté motivée et les outils nécessaires pour transformer mes idées en compétences et résultats concrets.",
-    },
-    {
-        name: "Cédric Magloire AKOFODJI",
-        role: "Consultant numérique",
-        avatar: "/images/cedric.jpg",
-        quote:
-            "La force de l'institut est son approche par la pratique. On apprend, on teste et on construit avec des objectifs professionnels clairs dès le premier mois.",
-    },
-    {
-        name: "Léa AHOUANSE",
-        role: "Étudiante",
-        avatar: "/images/Lea-Ahouanse.jpg",
-        quote:
-            "Une expérience immersive et encadrante. À FuturCraft, chaque module débouche sur une réalisation concrète qui renforce confiance et employabilité.",
-    },
+  {
+    name: "Carmel DANGBEGNON",
+    role: "Prompt Engineer",
+    avatar: "/images/carmel.jpg",
+    quote:
+      "Grâce à FuturCraft Institut, ma sœur a pu acquérir des compétences concrètes et trouver un emploi rapidement. Les formateurs sont passionnés et toujours à l'écoute.",
+  },
+  {
+    name: "William ZOMANHOUN",
+    role: "Développeur web",
+    avatar: "/images/wiliam.jpg",
+    quote:
+      "Les projets concrets m'ont permis de progresser rapidement et de prendre confiance. J'ai appris à travailler comme dans une véritable équipe produit.",
+  },
+  {
+    name: "Carlos HOUESSINON",
+    role: "Graphiste & UI/UX Designer",
+    avatar: "/images/houessinon.jpg",
+    quote:
+      "Une formation accessible et exigeante, portée par des intervenants toujours disponibles. Chaque cours nous rapproche un peu plus du monde professionnel.",
+  },
+  {
+    name: "Léa AHOUANSE",
+    role: "Étudiante",
+    avatar: "/images/Lea-Ahouanse.jpg",
+    quote:
+      "Une expérience immersive et encadrante. À FuturCraft, chaque module débouche sur une réalisation concrète qui renforce confiance et employabilité.",
+  },
+  {
+    name: "Nicodème ATAKOUN",
+    role: "Spécialiste Marketing digital",
+    avatar: "/images/nicodem.jpg",
+    quote:
+      "J'ai trouvé à FuturCraft une communauté motivée et les outils nécessaires pour transformer mes idées en compétences et résultats concrets.",
+  },
+  {
+    name: "Cédric Magloire AKOFODJI",
+    role: "Consultant numérique",
+    avatar: "/images/cedric.jpg",
+    quote:
+      "La force de l'institut est son approche par la pratique. On apprend, on teste et on construit avec des objectifs professionnels clairs dès le premier mois.",
+  },
 ];
 
-const trainingPricing = [
-    { title: "Développement web", duration: "2 ans", price: "300.000 FCFA / an" },
-    { title: "Développement IA", duration: "2 ans", price: "300.000 FCFA / an" },
-    { title: "Web master", duration: "1 an", price: "300.000 FCFA" },
-    { title: "Photographie, cadrage et montage vidéo", duration: "1 an", price: "300.000 FCFA" },
-    { title: "Graphisme et web design", duration: "1 an", price: "300.000 FCFA" },
-    { title: "Graphisme et sérigraphie", duration: "1 an", price: "250.000 FCFA" },
-    { title: "Maintenance informatique et réseau", duration: "9 mois", price: "250.000 FCFA" },
-    { title: "Marketing digital", duration: "8 mois", price: "250.000 FCFA / an" },
-    { title: "Secrétariat et caisse", duration: "6 mois", price: "200.000 FCFA" },
-    { title: "Copywriting", duration: "6 mois", price: "250.000 FCFA" },
-    { title: "E-commerce", duration: "6 mois", price: "200.000 FCFA" },
-    { title: "Maîtrise IA (ChatGPT, Midjourney, etc.)", duration: "1 mois", price: "70.000 FCFA" },
-    { title: "Pilotage de drone professionnel", duration: "1 mois", price: "100.000 FCFA" },
-    { title: "Trading & analyse des marchés financiers", duration: "1 mois", price: "100.000 FCFA" },
-];
-
-const instructors = [
-    {
-        name: "Prosper SOSSOU",
-        role: "Intervenant Référent en Développement Web & Technologies Fullstack",
-    },
-    {
-        name: "Herman HOUNKPE",
-        role: "Intervenant Spécialiste en Marketing Digital & Stratégie d'Acquisition",
-    },
-    {
-        name: "Gauthier DOSSOU",
-        role: "Intervenant en Design Graphique, Direction Artistique & Communication",
-    },
+const steps = [
+  { n: "01", title: "Choisis ta filière", text: "12 formations, de 1 à 9 mois. Un conseiller t'aide à trancher si tu hésites." },
+  { n: "02", title: "Candidate en ligne", text: "5 minutes, depuis ton téléphone. Tu reçois ton numéro de dossier immédiatement." },
+  { n: "03", title: "Réserve ta place", text: "25 000 FCFA de frais de dossier par MoMo, Moov Money, carte ou à la caisse." },
+  { n: "04", title: "Rejoins ta promotion", text: "Reçu certifié, attestation, groupe de promo : tu démarres le jour J." },
 ];
 
 export default async function HomePage() {
-    const formations = await getFormations();
+  const [formations, projects] = await Promise.all([getFormations(), getProjects()]);
+  const featured = formations.slice(0, 6);
+  const featuredProjects = projects.slice(0, 3);
 
-    return (
-        <div className="overflow-hidden bg-slate-50">
-            <section className="relative isolate min-h-[720px] bg-slate-950 text-white">
-                <Image
-                    src="/images/hero-bg.jpg"
-                    alt="Étudiants en formation numérique à FuturCraft"
-                    fill
-                    priority
-                    sizes="100vw"
-                    className="object-cover object-center opacity-55"
-                />
-                <div className="absolute inset-0 bg-[linear-gradient(100deg,rgba(7,13,38,0.98)_0%,rgba(15,23,66,0.88)_44%,rgba(30,41,110,0.35)_100%)]" />
-                <div className="absolute inset-0 bg-grid-dark opacity-30" />
-                <div className="hero-orb hero-orb-one" />
-                <div className="hero-orb hero-orb-two" />
+  return (
+    <div className="overflow-x-clip">
+      {/* ─────────────────────────── HERO ─────────────────────────── */}
+      <section className="relative border-b border-ink bg-paper">
+        <div className="wrap grid gap-10 pb-16 pt-12 lg:grid-cols-12 lg:gap-8 lg:pb-24 lg:pt-20">
+          <div className="lg:col-span-8">
+            <p className="eyebrow animate-fade-up text-brand-700">
+              Institut de formation aux métiers du numérique — Cotonou, Bénin
+            </p>
+            <h1 className="display-xl mt-8 animate-fade-up delay-100 text-ink">
+              Apprends.
+              <br />
+              Crée.
+              <br />
+              <span className="serif-accent font-normal text-brand-700">Innove.</span>
+            </h1>
+          </div>
 
-                <div className="relative mx-auto flex min-h-[720px] max-w-7xl items-center px-4 py-24 sm:px-6 lg:px-8">
-                    <div className="grid w-full items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
-                        <div className="max-w-2xl">
-                            <h1 className="animate-fade-up font-display text-5xl font-black leading-[1.04] tracking-tight sm:text-6xl lg:text-7xl">
-                                Ton avenir
-                                <span className="block bg-gradient-to-r from-blue-300 via-cyan-200 to-white bg-clip-text text-transparent">
-                                    se construit ici.
-                                </span>
-                            </h1>
-                            <p className="animate-fade-up delay-200 mt-6 max-w-xl text-base leading-8 text-blue-100/80 sm:text-lg">
-                                Forme-toi aux métiers les plus demandés du
-                                numérique avec des projets concrets, des mentors
-                                passionnés et une communauté qui avance avec
-                                toi.
-                            </p>
-                            <div className="animate-fade-up delay-300 mt-9 flex flex-col gap-3 sm:flex-row">
-                                <Link
-                                    href="/inscription"
-                                    className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-6 py-3.5 text-sm font-extrabold text-blue-950 shadow-xl shadow-blue-950/30 transition-all hover:-translate-y-1 hover:bg-blue-50"
-                                >
-                                    S&apos;inscrire
-                                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                                </Link>
-                                <Link
-                                    href="/formations"
-                                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-6 py-3.5 text-sm font-bold text-white backdrop-blur-md transition-all hover:-translate-y-1 hover:bg-white/15"
-                                >
-                                    <Play className="h-4 w-4 fill-current text-cyan-300" />
-                                    Découvrir les formations
-                                </Link>
-                            </div>
-                            <div className="animate-fade-up delay-400 mt-10 flex flex-wrap gap-x-6 gap-y-3 text-xs font-semibold text-blue-100/70">
-                                <span className="flex items-center gap-2">
-                                    <CheckCircle2 className="h-4 w-4 text-emerald-300" />
-                                    Projets réels
-                                </span>
-                                <span className="flex items-center gap-2">
-                                    <CheckCircle2 className="h-4 w-4 text-emerald-300" />
-                                    Certifications professionnelles
-                                </span>
-                                <span className="flex items-center gap-2">
-                                    <CheckCircle2 className="h-4 w-4 text-emerald-300" />
-                                    Accompagnement emploi
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="relative hidden min-h-[430px] lg:block">
-                            <div className="absolute right-2 top-4 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl" />
-                            <div className="absolute right-10 top-16 h-[350px] w-[350px] rounded-[3rem] border border-white/15 bg-white/10 shadow-2xl shadow-blue-950/50 backdrop-blur-sm hero-card-tilt" />
-                            <div className="absolute right-20 top-28 h-[350px] w-[350px] overflow-hidden rounded-[2.5rem] border border-white/20 shadow-2xl shadow-blue-950/50 hero-card-tilt">
-                                <Image
-                                    src="/images/hero-bg.jpg"
-                                    alt=""
-                                    fill
-                                    sizes="350px"
-                                    className="object-cover object-center"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-blue-950/90 via-transparent to-transparent" />
-                                <div className="absolute bottom-6 left-6 right-6">
-                                    <div className="mb-2 flex items-center gap-2 text-xs font-bold text-cyan-200">
-                                        <span className="h-2 w-2 rounded-full bg-emerald-300 shadow-[0_0_12px_#6ee7b7]" />
-                                        Campus en mouvement
-                                    </div>
-                                    <p className="font-display text-2xl font-bold">
-                                        Apprends. Crée. Innove.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-slate-50 to-transparent" />
-            </section>
-
-            <section className="relative z-10 mx-auto -mt-2 max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div className="grid overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-900/10 sm:grid-cols-3">
-                    {([
-                        {
-                            variant: "count" as const,
-                            target: 12,
-                            prefix: "",
-                            suffix: "+",
-                            label: "formations professionnalisantes",
-                            icon: GraduationCap,
-                        },
-                        {
-                            variant: "count" as const,
-                            target: 500,
-                            prefix: "",
-                            suffix: "+",
-                            label: "talents accompagnés",
-                            icon: Users,
-                        },
-                        {
-                            variant: "address" as const,
-                            icon: MapPin,
-                            label: "Godomey, Supermarché O Bénin Avant pk14",
-                        },
-                    ] as Array<
-                        | { variant: "count"; target: number; prefix?: string; suffix?: string; label: string; icon: typeof MapPin }
-                        | { variant: "address"; label: string; icon: typeof MapPin }
-                    >).map((item) => {
-                        const { icon: Icon, label } = item;
-                        return (
-                        <div
-                            key={label}
-                            className="flex items-center gap-4 border-b border-slate-100 p-6 last:border-0 sm:border-b-0 sm:border-r sm:last:border-r-0">
-                            <div className="rounded-2xl bg-blue-50 p-3 text-blue-600">
-                                <Icon className="h-5 w-5" />
-                            </div>
-                            <div>
-                                {item.variant === "address" ? (
-                                    <p className="font-display text-lg font-black leading-tight text-slate-950">
-                                        {label}
-                                    </p>
-                                ) : (
-                                    <>
-                                        <p className="font-display text-2xl font-black text-slate-950">
-                                            <StatCounter target={item.target} prefix={item.prefix} suffix={item.suffix} />
-                                        </p>
-                                        <p className="text-xs font-medium text-slate-500">
-                                            {label}
-                                        </p>
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                        );
-                    })}
-                </div>
-            </section>
-
-            <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-                <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-                    <div>
-                        <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-600">
-                            Choisis ton terrain de jeu
-                        </p>
-                        <h2 className="mt-3 font-display text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
-                            Des compétences qui ouvrent des portes
-                        </h2>
-                        <p className="mt-3 max-w-xl text-sm leading-7 text-slate-600">
-                            Un apprentissage pratique pour passer de l&apos;idée
-                            à l&apos;impact, accompagné par des experts du
-                            terrain.
-                        </p>
-                    </div>
-                    <Link
-                        href="/formations"
-                        className="group inline-flex items-center gap-2 text-sm font-extrabold text-blue-600 hover:text-blue-700"
-                    >
-                        Voir tout le catalogue
-                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                </div>
-                <div className="mt-10 grid gap-5 md:grid-cols-3">
-                    {formations.slice(0, 3).map((formation, index) => (
-                        <Reveal key={formation.id} delay={(index % 3) * 90} className="h-full">
-                            <Link
-                                href={`/formation/${formation.slug}`}
-                                className="group flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-xl"
-                            >
-                                <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
-                                    <Image
-                                        src={formation.imageUrl}
-                                        alt={formation.title}
-                                        fill
-                                        sizes="(max-width: 768px) 100vw, 33vw"
-                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                    />
-                                    <span className="absolute left-4 top-4 rounded-lg bg-white/95 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-blue-700 shadow-sm">
-                                        {formation.category}
-                                    </span>
-                                    <span className="absolute bottom-4 right-4 rounded-lg bg-slate-950/75 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur">
-                                        {formation.duration}
-                                    </span>
-                                </div>
-                                <div className="flex flex-1 flex-col p-5">
-                                    <div className="mb-2 flex items-start justify-between gap-3">
-                                        <h3 className="font-display text-lg font-bold leading-snug text-slate-950 group-hover:text-blue-600">
-                                            {formation.title}
-                                        </h3>
-                                        <span className="text-xs font-black text-blue-600">
-                                            {index + 1}
-                                        </span>
-                                    </div>
-                                    <p className="line-clamp-2 text-xs leading-6 text-slate-500">
-                                        {formation.shortDescription}
-                                    </p>
-                                    <div className="mt-auto flex items-center justify-between border-t border-slate-100 pt-4">
-                                        <span className="text-xs font-bold text-slate-500">
-                                            Dès {formatPrice(formation.price)} FCFA
-                                        </span>
-                                        <span className="inline-flex items-center text-xs font-extrabold text-blue-600">
-                                            Découvrir{" "}
-                                            <ArrowRight className="ml-1 inline h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                                        </span>
-                                    </div>
-                                </div>
-                            </Link>
-                        </Reveal>
-                    ))}
-                </div>
-            </section>
-
-            <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-                <div className="text-center">
-                    <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-600">
-                        Partenariats & réseau
-                    </p>
-                    <h2 className="mt-3 font-display text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
-                        Plus de 20+ entreprises partenaires
-                    </h2>
-                    <p className="mx-auto mt-4 max-w-3xl text-sm leading-7 text-slate-600">
-                        Le centre affiche des collaborations solides pour les stages,
-                        projets encadrés et recrutements de ses apprenants.
-                    </p>
-                </div>
-                <div className="mt-10 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                    {partnerCompanies.map((company, index) => (
-                        <Reveal key={company} delay={(index % 4) * 70} className="h-full">
-                            <div className="h-full rounded-2xl border border-slate-200 bg-white p-5 text-center text-sm font-semibold text-slate-700 shadow-sm transition-all hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg">
-                                {company}
-                            </div>
-                        </Reveal>
-                    ))}
-                </div>
-                <div className="mt-6 rounded-2xl border border-blue-100 bg-blue-50/60 p-5 text-center text-sm text-slate-700">
-                    <span className="font-bold text-blue-700">FuturCraft Institut et Programme Futur</span> fait partie des programmes phares de notre écosystème de formation et d&apos;engagement numérique.
-                </div>
-            </section>
-
-            <section className="bg-slate-100/70 py-24">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="text-center">
-                        <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-600">
-                            Témoignages
-                        </p>
-                        <h2 className="mt-3 font-display text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
-                            Ce que nos apprenants racontent
-                        </h2>
-                    </div>
-                    <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                        {testimonials.map((item, index) => (
-                            <Reveal key={item.name} delay={(index % 3) * 90} className="h-full">
-                                <article className="flex h-full flex-col rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
-                                    <p className="text-sm leading-7 text-slate-600 italic">
-                                        &ldquo;{item.quote}&rdquo;
-                                    </p>
-                                    <div className="mt-6 flex items-center gap-3 border-t border-slate-200 pt-4">
-                                        {item.avatar && (
-                                            <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full border-2 border-blue-100">
-                                                <Image
-                                                    src={item.avatar}
-                                                    alt={item.name}
-                                                    fill
-                                                    sizes="44px"
-                                                    className="object-cover"
-                                                />
-                                            </div>
-                                        )}
-                                        <div>
-                                            <p className="font-bold text-slate-900">{item.name}</p>
-                                            <p className="text-xs text-slate-500">{item.role}</p>
-                                        </div>
-                                    </div>
-                                </article>
-                            </Reveal>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
-                <div className="text-center">
-                    <p className="text-xs font-black uppercase tracking-[0.2em] text-blue-600">
-                        Tarifs & durée
-                    </p>
-                    <h2 className="mt-3 font-display text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">
-                        Formations et prix à l&apos;heure actuelle
-                    </h2>
-                </div>
-                <div className="mt-10 overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-                    <div className="grid grid-cols-[2.2fr_1fr_1.1fr] border-b border-slate-200 bg-slate-50 text-left text-xs font-black uppercase tracking-[0.16em] text-slate-600">
-                        <div className="px-5 py-4">Formation</div>
-                        <div className="px-5 py-4">Durée</div>
-                        <div className="px-5 py-4">Tarif</div>
-                    </div>
-                    {trainingPricing.map((training) => (
-                        <div
-                            key={training.title}
-                            className="grid grid-cols-[2.2fr_1fr_1.1fr] border-b border-slate-200 last:border-b-0 text-sm text-slate-700"
-                        >
-                            <div className="px-5 py-4 font-semibold">{training.title}</div>
-                            <div className="px-5 py-4">{training.duration}</div>
-                            <div className="px-5 py-4 font-bold text-blue-700">{training.price}</div>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            <section className="bg-slate-950 py-24 text-white">
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="text-center">
-                        <p className="text-xs font-black uppercase tracking-[0.2em] text-cyan-300">
-                            Équipe pédagogique
-                        </p>
-                        <h2 className="mt-3 font-display text-3xl font-black tracking-tight text-white sm:text-4xl">
-                            Des intervenants experts et engagés
-                        </h2>
-                    </div>
-                    <div className="mt-10 grid gap-6 md:grid-cols-3">
-                        {instructors.map((instructor, index) => (
-                            <Reveal key={instructor.name} delay={(index % 3) * 90} className="h-full">
-                                <div className="h-full rounded-3xl border border-slate-800 bg-slate-900/80 p-6 text-center shadow-lg shadow-slate-950/20 transition-all hover:-translate-y-1 hover:border-blue-500/50">
-                                    <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 text-xl font-black text-white">
-                                        {instructor.name
-                                            .split(" ")
-                                            .map((part) => part[0])
-                                            .slice(0, 2)
-                                            .join("")}
-                                    </div>
-                                    <h3 className="text-lg font-bold text-white">{instructor.name}</h3>
-                                    <p className="mt-3 text-sm leading-6 text-slate-300">{instructor.role}</p>
-                                </div>
-                            </Reveal>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            <section className="mx-4 mb-24 overflow-hidden rounded-[2rem] bg-slate-950 sm:mx-6 lg:mx-auto lg:max-w-7xl">
-                <div className="relative px-6 py-14 sm:px-12 lg:px-16">
-                    <div className="absolute -right-24 -top-32 h-80 w-80 rounded-full bg-blue-600/30 blur-3xl" />
-                    <Rocket className="absolute right-12 top-12 h-24 w-24 rotate-12 text-blue-400/10" />
-                    <div className="relative max-w-2xl">
-                        <p className="text-xs font-black uppercase tracking-[0.2em] text-cyan-300">
-                            Prêt à passer à l&apos;action ?
-                        </p>
-                        <h2 className="mt-4 font-display text-3xl font-black text-white sm:text-4xl">
-                            Ta prochaine version commence aujourd&apos;hui.
-                        </h2>
-                        <p className="mt-4 text-sm leading-7 text-blue-100/70">
-                            Les prochaines cohortes se remplissent vite. Réserve
-                            ta place et construis un avenir dont tu seras fier.
-                        </p>
-                        <Link
-                            href="/inscription"
-                            className="mt-7 inline-flex items-center gap-2 rounded-xl bg-blue-500 px-5 py-3 text-sm font-extrabold text-white shadow-lg shadow-blue-500/25 transition-all hover:bg-blue-400"
-                        >
-                            Rejoindre FuturCraft{" "}
-                            <ArrowRight className="h-4 w-4" />
-                        </Link>
-
-                        <div className="mt-10 border-t border-white/10 pt-6">
-                            <p className="text-xs font-bold uppercase tracking-[0.2em] text-cyan-300">
-                                Ou recevoir la brochure
-                            </p>
-                            <div className="mt-3">
-                                <NewsletterForm />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+          <div className="flex flex-col justify-end lg:col-span-4">
+            <p className="animate-fade-up delay-200 max-w-md text-lg leading-8 text-ink/70">
+              Des formations courtes et intensives, 80 % de pratique, des mentors en activité — pour passer de
+              l&apos;idée à l&apos;emploi.
+            </p>
+            <div className="mt-8 flex animate-fade-up flex-wrap gap-3 delay-300">
+              <Link href="/inscription" className="btn btn-ink btn-lg">
+                Candidater
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+              <Link href="/formations" className="btn btn-outline btn-lg">
+                Voir les formations
+              </Link>
+            </div>
+          </div>
         </div>
-    );
+
+        {/* Bande image + chiffres */}
+        <div className="wrap pb-0">
+          <div className="grid border border-ink lg:grid-cols-12">
+            <div className="relative aspect-[16/10] overflow-hidden bg-ink lg:col-span-7 lg:aspect-auto lg:min-h-[440px]">
+              <Image
+                src="/images/ange.jpg"
+                alt="Étudiants en atelier sur le campus FuturCraft à Godomey"
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 60vw"
+                className="object-cover"
+              />
+              <div className="absolute left-4 top-4 flex items-center gap-2 lg:left-6 lg:top-6">
+                <span className="tag tag-paper">Campus de Godomey</span>
+              </div>
+              <div className="absolute bottom-4 right-4 lg:bottom-6 lg:right-6">
+                <RotatingBadge tone="accent" />
+              </div>
+            </div>
+
+            <div className="grid divide-y divide-ink border-ink sm:grid-cols-3 lg:col-span-5 lg:grid-cols-1 lg:divide-y lg:border-l sm:divide-x sm:divide-y-0 lg:divide-x-0">
+              <div className="flex flex-col justify-between p-6 lg:p-8">
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-ink/50">Formations</p>
+                <p className="numeral mt-6 text-6xl text-ink lg:text-7xl">
+                  <StatCounter target={12} />
+                </p>
+                <p className="mt-3 text-sm text-ink/65">filières professionnalisantes</p>
+              </div>
+              <div className="flex flex-col justify-between bg-brand-700 p-6 text-paper lg:p-8">
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-paper/60">Talents</p>
+                <p className="numeral mt-6 text-6xl lg:text-7xl">
+                  <StatCounter target={500} suffix="+" />
+                </p>
+                <p className="mt-3 text-sm text-paper/75">apprenants accompagnés</p>
+              </div>
+              <div className="flex flex-col justify-between bg-accent-500 p-6 text-ink lg:p-8">
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-ink/60">Pratique</p>
+                <p className="numeral mt-6 text-6xl lg:text-7xl">
+                  <StatCounter target={80} suffix="%" />
+                </p>
+                <p className="mt-3 text-sm text-ink/70">du temps en atelier et sur projet</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Marquee */}
+        <div className="marquee mt-12 border-t border-ink bg-ink py-4 text-paper lg:mt-16">
+          <div className="marquee-track" aria-hidden>
+            {[...marqueeItems, ...marqueeItems].map((item, i) => (
+              <span key={i} className="flex items-center font-display text-xl font-bold tracking-tight sm:text-2xl">
+                <span className="px-8">{item}</span>
+                <span className="h-2 w-2 rounded-full bg-accent-500" />
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────── MANIFESTE ─────────────────────────── */}
+      <section className="border-b border-ink bg-paper">
+        <div className="wrap grid gap-12 py-20 lg:grid-cols-12 lg:py-28">
+          <div className="lg:col-span-4">
+            <p className="eyebrow text-brand-700">
+              <span className="tabular-nums">01</span>
+              <span className="text-ink/30">/</span>
+              Pourquoi FuturCraft
+            </p>
+          </div>
+          <div className="lg:col-span-8">
+            <Reveal>
+              <p className="display-md text-ink">
+                Des milliers de diplômés, trop peu de profils opérationnels. Nous formons{" "}
+                <span className="serif-accent font-normal text-brand-700">ceux qui savent faire</span> — et le
+                prouvent, projet après projet.
+              </p>
+            </Reveal>
+            <div className="mt-14 grid gap-px border border-ink bg-ink sm:grid-cols-2">
+              {pillars.map((p, i) => (
+                <div key={p.n} className="bg-paper p-7 lg:p-9">
+                  <Reveal delay={i * 80}>
+                    <p className="numeral text-4xl text-brand-700/30">{p.n}</p>
+                    <h3 className="display-sm mt-6 text-ink">{p.title}</h3>
+                    <p className="mt-3 text-sm leading-7 text-ink/65">{p.text}</p>
+                  </Reveal>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────── FORMATIONS ─────────────────────────── */}
+      <section className="border-b border-ink bg-paper-100">
+        <div className="wrap py-20 lg:py-28">
+          <SectionHeading
+            index="02"
+            eyebrow="Le catalogue"
+            title={
+              <>
+                Douze façons d&apos;entrer
+                <br className="hidden sm:block" /> dans le numérique.
+              </>
+            }
+            description="Des parcours longs pour devenir développeur ou designer, des formats courts pour maîtriser un outil en un mois. Tous en présentiel à Godomey."
+            action={
+              <Link href="/formations" className="arrow-link text-ink">
+                Tout le catalogue <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            }
+          />
+
+          <ol className="mt-14 border-t-2 border-ink">
+            {featured.map((f, i) => (
+              <li key={f.id} className="border-b border-ink">
+                <Link
+                  href={`/formation/${f.slug}`}
+                  className="group grid items-center gap-4 py-6 transition-colors hover:bg-ink hover:text-paper sm:grid-cols-12 sm:gap-6 lg:py-7"
+                >
+                  <span className="numeral px-1 text-2xl text-ink/30 group-hover:text-accent-400 sm:col-span-1 sm:px-2 lg:text-3xl">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="relative hidden aspect-[4/3] overflow-hidden bg-ink/10 sm:col-span-2 sm:block lg:col-span-2">
+                    <Image
+                      src={f.imageUrl}
+                      alt=""
+                      fill
+                      sizes="200px"
+                      className="object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
+                    />
+                  </div>
+                  <div className="px-1 sm:col-span-5 sm:px-2 lg:col-span-5">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-700 group-hover:text-accent-400">
+                      {f.category}
+                    </p>
+                    <h3 className="display-sm mt-2">{f.title}</h3>
+                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-ink/60 group-hover:text-paper/65 lg:hidden">
+                      {f.shortDescription}
+                    </p>
+                  </div>
+                  <div className="hidden text-sm text-ink/65 group-hover:text-paper/70 lg:col-span-2 lg:block">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/55 group-hover:text-paper/55">
+                      Durée
+                    </p>
+                    <p className="mt-1 font-semibold">{f.duration.split(" (")[0]}</p>
+                  </div>
+                  <div className="flex items-center justify-between gap-4 px-1 sm:col-span-4 sm:px-2 lg:col-span-2 lg:justify-end">
+                    <div className="lg:text-right">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-ink/55 group-hover:text-paper/55">
+                        Tarif
+                      </p>
+                      <p className="mt-1 font-display text-lg font-bold">{formatPrice(f.price)} FCFA</p>
+                    </div>
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center border border-ink transition-colors group-hover:border-accent-400 group-hover:bg-accent-400 group-hover:text-ink">
+                      <ArrowUpRight className="h-4 w-4" />
+                    </span>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ol>
+
+          <div className="mt-10 flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
+            <p className="text-sm text-ink/60">
+              + {Math.max(formations.length - featured.length, 0)} autres formations : Webmaster, Maintenance & Réseau,
+              Copywriting, E-commerce…
+            </p>
+            <Link href="/formations" className="btn btn-ink">
+              Voir les {formations.length} formations
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────── MÉTHODE / IMAGE ─────────────────────────── */}
+      <section className="border-b border-ink bg-ink text-paper">
+        <div className="grid lg:grid-cols-2">
+          <div className="relative aspect-[4/3] overflow-hidden lg:aspect-auto lg:min-h-[640px]">
+            <Image
+              src="/images/projet-vano-baby.jpg"
+              alt="Salle de projet : un site livré par les étudiants affiché sur tous les postes"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+            />
+            <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 lg:p-8">
+              <span className="tag tag-accent">Projet de fin de module</span>
+            </div>
+          </div>
+          <div className="flex flex-col justify-center px-5 py-16 sm:px-8 lg:px-16 lg:py-24">
+            <p className="eyebrow text-accent-400">
+              <span className="tabular-nums">03</span>
+              <span className="text-paper/30">/</span>
+              La méthode
+            </p>
+            <h2 className="display-md mt-6">
+              On n&apos;apprend pas à coder
+              <br />
+              en regardant.{" "}
+              <span className="serif-accent font-normal text-accent-400">On livre.</span>
+            </h2>
+            <p className="mt-6 max-w-lg text-base leading-8 text-paper/65">
+              Chaque semaine, un livrable. Chaque module, une soutenance. À la fin du parcours, un projet réel
+              déployé en production et défendu devant un jury d&apos;entreprises partenaires — c&apos;est lui qui
+              vous ouvre les portes, pas seulement le certificat.
+            </p>
+            <ul className="mt-10 divide-y divide-paper/15 border-y border-paper/15">
+              {[
+                ["Ateliers", "Salles informatiques climatisées, studio audiovisuel, lab drones & IA."],
+                ["Rythme", "Cours du jour, du soir ou du samedi selon les formations."],
+                ["Certification", "Certificat professionnel FuturCraft, reçu et attestation vérifiables par QR code."],
+                ["Insertion", "Stages, offres partenaires et accompagnement jusqu'au premier poste."],
+              ].map(([k, v]) => (
+                <li key={k} className="grid gap-1 py-4 sm:grid-cols-[140px_1fr] sm:gap-6">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-accent-400">{k}</span>
+                  <span className="text-sm leading-6 text-paper/75">{v}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-10">
+              <Link href="/institut" className="btn btn-paper">
+                Découvrir l&apos;institut
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────── PROJETS ─────────────────────────── */}
+      {featuredProjects.length > 0 && (
+        <section className="border-b border-ink bg-paper">
+          <div className="wrap py-20 lg:py-28">
+            <SectionHeading
+              index="04"
+              eyebrow="Réalisations"
+              title={
+                <>
+                  Fait par nos étudiants,
+                  <br className="hidden sm:block" /> utilisé pour de vrai.
+                </>
+              }
+              action={
+                <Link href="/projets-etudiants" className="arrow-link text-ink">
+                  Tous les projets <ArrowUpRight className="h-4 w-4" />
+                </Link>
+              }
+            />
+            <div className="mt-14 grid gap-px border border-ink bg-ink md:grid-cols-3">
+              {featuredProjects.map((p, i) => {
+                const tech = (JSON.parse(p.technologies || "[]") as string[]).slice(0, 3);
+                return (
+                  <article key={p.id} className="group flex flex-col bg-paper">
+                    <div className="relative aspect-[16/10] overflow-hidden border-b border-ink bg-ink/5">
+                      <Image
+                        src={p.coverImage}
+                        alt={p.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                      />
+                    </div>
+                    <Reveal delay={i * 90} className="flex flex-1 flex-col p-6 lg:p-7">
+                      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-700">{p.formationTitle}</p>
+                      <h3 className="display-sm mt-3 text-ink">{p.title}</h3>
+                      <p className="mt-3 line-clamp-3 text-sm leading-6 text-ink/65">{p.tagline}</p>
+                      <div className="mt-auto flex flex-wrap gap-1.5 pt-6">
+                        {tech.map((t) => (
+                          <span key={t} className="tag text-ink/70">
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </Reveal>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ─────────────────────────── TÉMOIGNAGES ─────────────────────────── */}
+      <section className="border-b border-ink bg-paper-100">
+        <div className="wrap py-20 lg:py-28">
+          <SectionHeading
+            index="05"
+            eyebrow="Ils en parlent"
+            title={
+              <>
+                La parole aux
+                <span className="serif-accent font-normal text-brand-700"> apprenants.</span>
+              </>
+            }
+          />
+          <div className="mt-14 columns-1 gap-6 md:columns-2 xl:columns-3 [&>*]:mb-6 [&>*]:break-inside-avoid">
+            {testimonials.map((t, i) => (
+              <Reveal key={t.name} delay={(i % 3) * 80}>
+                <figure className="frame p-7">
+                  <Quote className="h-6 w-6 text-accent-500" />
+                  <blockquote className="mt-4 font-display text-lg font-medium leading-relaxed text-ink">
+                    {t.quote}
+                  </blockquote>
+                  <figcaption className="mt-6 flex items-center gap-3 border-t border-ink/10 pt-5">
+                    <span className="relative h-11 w-11 shrink-0 overflow-hidden rounded-full bg-ink/10">
+                      <Image src={t.avatar} alt="" fill sizes="44px" className="object-cover" />
+                    </span>
+                    <span>
+                      <span className="block text-sm font-bold text-ink">{t.name}</span>
+                      <span className="block text-xs text-ink/55">{t.role}</span>
+                    </span>
+                  </figcaption>
+                </figure>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────── PARCOURS D'ADMISSION ─────────────────────────── */}
+      <section className="border-b border-ink bg-paper">
+        <div className="wrap py-20 lg:py-28">
+          <SectionHeading
+            index="06"
+            eyebrow="Admission"
+            title="Quatre étapes, aucune paperasse."
+            description="Le processus est entièrement digitalisé, du choix de la filière à la remise du reçu certifié."
+            action={
+              <Link href="/admissions" className="arrow-link text-ink">
+                Modalités & tarifs <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            }
+          />
+          <div className="mt-14 grid gap-px border border-ink bg-ink lg:grid-cols-4">
+            {steps.map((s, i) => (
+              <div key={s.n} className="bg-paper p-7 lg:p-8">
+                <Reveal delay={i * 80} className="flex h-full flex-col lg:min-h-[236px]">
+                  <p className="numeral text-6xl text-ink lg:text-7xl">{s.n}</p>
+                  <h3 className="display-sm mt-auto pt-10 text-ink">{s.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-ink/65">{s.text}</p>
+                </Reveal>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────── CTA + BROCHURE ─────────────────────────── */}
+      <section className="bg-brand-700 text-paper">
+        <div className="wrap grid gap-12 py-20 lg:grid-cols-12 lg:py-28">
+          <div className="lg:col-span-7">
+            <p className="eyebrow text-accent-400">Prochaine rentrée</p>
+            <h2 className="display-lg mt-6">
+              Ta prochaine version
+              <br />
+              commence{" "}
+              <span className="serif-accent font-normal text-accent-400">aujourd&apos;hui.</span>
+            </h2>
+            <div className="mt-10 flex flex-wrap gap-3">
+              <Link href="/inscription" className="btn btn-accent btn-lg">
+                Candidater maintenant
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+              <a
+                href="https://wa.me/22943327832?text=Bonjour,%20je%20souhaite%20des%20informations%20sur%20les%20formations%20FuturCraft"
+                target="_blank"
+                rel="noreferrer"
+                className="btn btn-outline-light btn-lg"
+              >
+                Écrire sur WhatsApp
+              </a>
+            </div>
+          </div>
+          <div className="flex flex-col justify-end lg:col-span-5">
+            <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-paper/60">Recevoir la brochure</p>
+            <p className="mt-3 text-sm leading-7 text-paper/75">
+              Programmes détaillés, calendrier des sessions et grille tarifaire complète, dans votre boîte mail.
+            </p>
+            <div className="mt-5">
+              <NewsletterForm source="accueil" />
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
 }
