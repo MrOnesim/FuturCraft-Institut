@@ -11,9 +11,12 @@ import {
   companyOffers,
   events,
   blogArticles,
+  contactMessages,
+  newsletterSubscribers,
 } from "@/db/schema";
 import { ensureDatabaseSeeded } from "@/db/ensure-seed";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
+import { slugify } from "@/lib/site";
 
 export async function getFormations() {
   await ensureDatabaseSeeded();
@@ -333,14 +336,92 @@ export async function getProjects() {
   return await db.select().from(studentProjects).orderBy(desc(studentProjects.isFeatured));
 }
 
-export async function getEvents() {
+export type EventRecord = typeof events.$inferSelect & { slug: string };
+
+/** Les événements n'ont pas de colonne slug : il est dérivé du titre, de façon stable. */
+function withEventSlug(ev: typeof events.$inferSelect): EventRecord {
+  return { ...ev, slug: slugify(ev.title) };
+}
+
+export async function getEvents(): Promise<EventRecord[]> {
   await ensureDatabaseSeeded();
-  return await db.select().from(events);
+  const rows = await db.select().from(events);
+  return rows.map(withEventSlug);
+}
+
+export async function getEventBySlug(slug: string): Promise<EventRecord | null> {
+  const all = await getEvents();
+  return all.find((ev) => ev.slug === slug) || null;
 }
 
 export async function getBlogArticles() {
   await ensureDatabaseSeeded();
-  return await db.select().from(blogArticles);
+  return await db.select().from(blogArticles).orderBy(desc(blogArticles.id));
+}
+
+export async function getBlogArticleBySlug(slug: string) {
+  await ensureDatabaseSeeded();
+  const rows = await db.select().from(blogArticles).where(eq(blogArticles.slug, slug));
+  return rows[0] || null;
+}
+
+/* ------------------------------------------------------------------ */
+/* Demandes entrantes (contact, événements) et newsletter               */
+/* ------------------------------------------------------------------ */
+
+export async function saveContactMessage(data: {
+  name: string;
+  email?: string | null;
+  phone: string;
+  subject: string;
+  context?: string | null;
+  message: string;
+  source?: string | null;
+}) {
+  await ensureDatabaseSeeded();
+  const [row] = await db
+    .insert(contactMessages)
+    .values({
+      name: data.name,
+      email: data.email || null,
+      phone: data.phone,
+      subject: data.subject,
+      context: data.context || null,
+      message: data.message,
+      source: data.source || null,
+    })
+    .returning();
+  return row;
+}
+
+export async function getContactMessages() {
+  await ensureDatabaseSeeded();
+  return await db.select().from(contactMessages).orderBy(desc(contactMessages.createdAt));
+}
+
+export async function setContactMessageStatus(id: number, status: "nouveau" | "traite") {
+  const [row] = await db.update(contactMessages).set({ status }).where(eq(contactMessages.id, id)).returning();
+  return row || null;
+}
+
+/** Inscrit une adresse (idempotent) ; réactive un abonné désinscrit. */
+export async function subscribeNewsletter(email: string, source?: string | null) {
+  await ensureDatabaseSeeded();
+  const normalized = email.trim().toLowerCase();
+  const [row] = await db
+    .insert(newsletterSubscribers)
+    .values({ email: normalized, source: source || null })
+    .onConflictDoUpdate({
+      target: newsletterSubscribers.email,
+      set: { unsubscribedAt: null, source: sql`coalesce(${newsletterSubscribers.source}, ${source || null})` },
+    })
+    .returning();
+  return row;
+}
+
+export async function getNewsletterSubscribers() {
+  await ensureDatabaseSeeded();
+  return await db.select().from(newsletterSubscribers).orderBy(desc(newsletterSubscribers.createdAt));
 }
 
 export async function getCompanyOffers() {

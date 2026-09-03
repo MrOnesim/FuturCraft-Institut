@@ -521,7 +521,7 @@ export default async function HomePage() {
               Programmes détaillés, calendrier des sessions et grille tarifaire complète, dans votre boîte mail.
             </p>
             <div className="mt-5">
-              <NewsletterForm />
+              <NewsletterForm source="accueil" />
             </div>
           </div>
         </div>

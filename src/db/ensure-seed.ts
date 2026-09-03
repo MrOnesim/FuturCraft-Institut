@@ -3,6 +3,7 @@ import { formations } from "./schema";
 import { count } from "drizzle-orm";
 import { seedDatabase } from "./seed";
 import { syncSeedMedia } from "./sync-media";
+import { ensureLeadTables } from "./ensure-tables";
 
 let seedPromise: Promise<void> | null = null;
 
@@ -21,6 +22,12 @@ export async function ensureDatabaseSeeded() {
         }
       } catch (err) {
         console.error("Error checking seed:", err);
+      }
+      try {
+        // Tables ajoutées après la mise en production (formulaires du site).
+        await ensureLeadTables();
+      } catch (err) {
+        console.error("Error ensuring lead tables:", err);
       }
     })();
   }

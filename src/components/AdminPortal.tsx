@@ -23,7 +23,9 @@ import {
   RefreshCw,
   QrCode,
   LogOut,
+  Inbox,
 } from "lucide-react";
+import { AdminInbox, type InboxMessage, type InboxSubscriber } from "@/components/AdminInbox";
 
 interface AdminStats {
   totalStudents: number;
@@ -84,18 +86,22 @@ export function AdminPortal({
   initialStudents,
   initialPayments,
   formationsList,
+  initialMessages = [],
+  initialSubscribers = [],
 }: {
   initialStats: AdminStats;
   initialStudents: StudentItem[];
   initialPayments: PaymentItem[];
   formationsList: FormationItem[];
+  initialMessages?: InboxMessage[];
+  initialSubscribers?: InboxSubscriber[];
 }) {
   const [stats, setStats] = useState<AdminStats>(initialStats);
   const [students, setStudents] = useState<StudentItem[]>(initialStudents);
   const [payments, setPayments] = useState<PaymentItem[]>(initialPayments);
 
   const [currentRole, setCurrentRole] = useState<"super_admin" | "agent" | "financier">("super_admin");
-  const [activeTab, setActiveTab] = useState<"dashboard" | "etudiants" | "paiements" | "formations" | "roles">("dashboard");
+  const [activeTab, setActiveTab] = useState<"dashboard" | "etudiants" | "paiements" | "formations" | "demandes" | "roles">("dashboard");
 
   const router = useRouter();
 
@@ -366,6 +372,25 @@ export function AdminPortal({
           >
             <Layers className="w-4 h-4" />
             <span>Formations &amp; Tarifs ({formationsList.length})</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("demandes")}
+            className={`px-4 py-3 border-b-2 whitespace-nowrap transition-all flex items-center gap-2 ${
+              activeTab === "demandes"
+                ? "border-violet-600 text-violet-600"
+                : "border-transparent text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            <Inbox className="w-4 h-4" />
+            <span>
+              Demandes du site
+              {initialMessages.filter((m) => m.status === "nouveau").length > 0 && (
+                <span className="ml-1.5 inline-flex min-w-[18px] items-center justify-center rounded-full bg-blue-600 px-1.5 py-0.5 text-[10px] font-bold text-white">
+                  {initialMessages.filter((m) => m.status === "nouveau").length}
+                </span>
+              )}
+            </span>
           </button>
 
           <button
@@ -789,6 +814,11 @@ export function AdminPortal({
               ))}
             </div>
           </div>
+        )}
+
+        {/* TAB DEMANDES DU SITE (contact, événements, newsletter) */}
+        {activeTab === "demandes" && (
+          <AdminInbox initialMessages={initialMessages} initialSubscribers={initialSubscribers} />
         )}
 
         {/* 28. TAB ROLES ET ACCÈS */}
