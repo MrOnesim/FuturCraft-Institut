@@ -1,14 +1,22 @@
 import Image from "next/image";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight, MapPin } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { SectionHeading } from "@/components/SectionHeading";
 import { Reveal } from "@/components/Reveal";
 
-export const metadata = {
-  title: "L'Institut | FuturCraft Institut Bénin",
+export const metadata: Metadata = {
+  title: "L'Institut",
   description:
     "Histoire, mission, vision, valeurs et équipe dirigeante de FuturCraft Institut, centre d'excellence numérique fondé par Gauthier I. ORE au Bénin.",
+  alternates: { canonical: "/institut" },
+  openGraph: {
+    title: "L'Institut | FuturCraft Institut",
+    description:
+      "Histoire, mission, vision, valeurs et équipe dirigeante de FuturCraft Institut, centre d'excellence numérique fondé par Gauthier I. ORE au Bénin.",
+    url: "/institut",
+  },
 };
 
 const values = [

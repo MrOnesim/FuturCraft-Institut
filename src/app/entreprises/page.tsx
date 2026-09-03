@@ -1,12 +1,20 @@
 import { getCompanyOffers } from "@/lib/data-service";
+import type { Metadata } from "next";
 import { CompanyPortal } from "@/components/CompanyPortal";
 import { PageHero } from "@/components/PageHero";
 
 export const dynamic = "force-dynamic";
-export const metadata = {
-  title: "Espace Entreprises | FuturCraft Institut Bénin",
+export const metadata: Metadata = {
+  title: "Espace Entreprises",
   description:
     "Recrutez nos étudiants formés aux technologies modernes, déposez des offres de stage ou d'emploi et rejoignez notre réseau d'entreprises partenaires.",
+  alternates: { canonical: "/entreprises" },
+  openGraph: {
+    title: "Espace Entreprises | FuturCraft Institut",
+    description:
+      "Recrutez nos étudiants formés aux technologies modernes, déposez des offres de stage ou d'emploi et rejoignez notre réseau d'entreprises partenaires.",
+    url: "/entreprises",
+  },
 };
 
 const perks = [

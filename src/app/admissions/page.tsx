@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowUpRight, Smartphone, CreditCard, Banknote } from "lucide-react";
 import { getFormations } from "@/lib/data-service";
 import { FAQAccordion } from "@/components/FAQAccordion";
@@ -6,10 +7,17 @@ import { PageHero } from "@/components/PageHero";
 import { SectionHeading } from "@/components/SectionHeading";
 
 export const dynamic = "force-dynamic";
-export const metadata = {
-  title: "Admissions & Tarifs | FuturCraft Institut Bénin",
+export const metadata: Metadata = {
+  title: "Admissions & Tarifs",
   description:
     "Modalités d'admission, grille tarifaire transparente en FCFA, facilités de paiement échelonné en 3 à 5 fois et FAQ.",
+  alternates: { canonical: "/admissions" },
+  openGraph: {
+    title: "Admissions & Tarifs | FuturCraft Institut",
+    description:
+      "Modalités d'admission, grille tarifaire transparente en FCFA, facilités de paiement échelonné en 3 à 5 fois et FAQ.",
+    url: "/admissions",
+  },
 };
 
 const formatPrice = (price: number) =>

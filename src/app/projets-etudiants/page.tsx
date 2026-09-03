@@ -1,14 +1,22 @@
 import { getProjects } from "@/lib/data-service";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { ProjectsShowcase } from "@/components/ProjectsShowcase";
 import { PageHero } from "@/components/PageHero";
 
 export const dynamic = "force-dynamic";
-export const metadata = {
-  title: "Projets Étudiants | FuturCraft Institut Bénin",
+export const metadata: Metadata = {
+  title: "Projets Étudiants",
   description:
     "Découvrez les applications, plateformes et solutions concrètes développées par les étudiants de FuturCraft : e-commerce, IA, drones, e-santé.",
+  alternates: { canonical: "/projets-etudiants" },
+  openGraph: {
+    title: "Projets Étudiants | FuturCraft Institut",
+    description:
+      "Découvrez les applications, plateformes et solutions concrètes développées par les étudiants de FuturCraft : e-commerce, IA, drones, e-santé.",
+    url: "/projets-etudiants",
+  },
 };
 
 export default async function ProjectsPage() {

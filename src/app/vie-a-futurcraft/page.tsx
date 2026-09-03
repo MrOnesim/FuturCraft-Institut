@@ -1,4 +1,5 @@
 import { getEvents } from "@/lib/data-service";
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { CalendarDays, MapPin, ArrowUpRight } from "lucide-react";
@@ -6,10 +7,17 @@ import { PageHero } from "@/components/PageHero";
 import { SectionHeading } from "@/components/SectionHeading";
 
 export const dynamic = "force-dynamic";
-export const metadata = {
-  title: "Vie à FuturCraft | FuturCraft Institut Bénin",
+export const metadata: Metadata = {
+  title: "Vie à FuturCraft",
   description:
     "Découvrez l'ambiance, les hackathons, ateliers pratiques, sorties de promotion et moments de vie sur les campus de FuturCraft Institut.",
+  alternates: { canonical: "/vie-a-futurcraft" },
+  openGraph: {
+    title: "Vie à FuturCraft | FuturCraft Institut",
+    description:
+      "Découvrez l'ambiance, les hackathons, ateliers pratiques, sorties de promotion et moments de vie sur les campus de FuturCraft Institut.",
+    url: "/vie-a-futurcraft",
+  },
 };
 
 const lifeMoments = [
@@ -107,12 +115,16 @@ export default async function ViePage() {
                     <CalendarDays className="h-3.5 w-3.5" /> {ev.date}
                   </p>
                 </div>
-                <div className="relative aspect-[16/10] overflow-hidden border border-ink bg-ink/5 md:col-span-3">
-                  <Image src={ev.imageUrl} alt={ev.title} fill sizes="(max-width: 768px) 100vw, 25vw" className="object-cover" />
-                </div>
+                <Link href={`/evenements/${ev.slug}`} className="relative block aspect-[16/10] overflow-hidden border border-ink bg-ink/5 md:col-span-3" aria-label={`Voir l'événement ${ev.title}`}>
+                  <Image src={ev.imageUrl} alt="" fill sizes="(max-width: 768px) 100vw, 25vw" className="object-cover" />
+                </Link>
                 <div className="md:col-span-5">
                   <span className="tag text-ink/60">{ev.category}</span>
-                  <h3 className="display-sm mt-3 text-ink">{ev.title}</h3>
+                  <h3 className="display-sm mt-3 text-ink">
+                    <Link href={`/evenements/${ev.slug}`} className="hover:text-brand-700">
+                      {ev.title}
+                    </Link>
+                  </h3>
                   <p className="mt-2 line-clamp-3 text-sm leading-6 text-ink/65">{ev.description}</p>
                 </div>
                 <div className="flex items-center justify-between gap-4 text-sm md:col-span-2 md:flex-col md:items-end">
@@ -120,6 +132,9 @@ export default async function ViePage() {
                     <MapPin className="h-3.5 w-3.5" /> {ev.location}
                   </span>
                   <span className="font-display font-bold text-ink">{ev.attendeesCount} inscrits</span>
+                  <Link href={`/evenements/${ev.slug}`} className="arrow-link text-xs uppercase tracking-[0.14em] text-ink">
+                    S&apos;inscrire <ArrowUpRight className="h-3.5 w-3.5" />
+                  </Link>
                 </div>
               </li>
             ))}

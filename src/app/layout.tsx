@@ -6,13 +6,16 @@ import "@fontsource/instrument-serif/400-italic.css";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { JsonLd, organizationJsonLd, websiteJsonLd } from "@/components/JsonLd";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://futurcraft.bj"),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "FuturCraft Institut | Centre de formation aux métiers du numérique au Bénin",
     template: "%s | FuturCraft Institut",
   },
+  alternates: { canonical: "/" },
   description:
     "Construisez les compétences de demain : Développement Web Fullstack, Intelligence Artificielle, Web Design, Pilotage de Drone, Marketing Digital, Sérigraphie et Audiovisuel à Godomey, Supermarché O Bénin Avant pk14.",
   keywords: [
@@ -27,21 +30,18 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "fr_BJ",
-    url: "https://futurcraft.bj",
+    url: "/",
     siteName: "FuturCraft Institut",
     title: "FuturCraft Institut | Centre de formation aux métiers du numérique au Bénin",
     description:
       "Développement Web, Intelligence Artificielle, UI/UX Design, Drone, Marketing Digital & plus encore à Godomey, Supermarché O Bénin Avant pk14.",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "FuturCraft Institut | Centre de formation aux métiers du numérique au Bénin",
-    description:
-      "Apprends. Crée. Innove. Transforme ton avenir — le campus numérique de référence au Bénin.",
-  },
+  // Titre/description Twitter hérités de l'Open Graph de chaque page (pas de valeurs figées ici).
+  twitter: { card: "summary_large_image" },
   applicationName: "FuturCraft Institut",
   category: "education",
   robots: { index: true, follow: true },
+  formatDetection: { telephone: true, email: true, address: true },
 };
 
 export const viewport: Viewport = {
@@ -60,6 +60,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           Aller au contenu principal
         </a>
+        <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         <Header />
         <main id="contenu" className="flex-1">
           {children}

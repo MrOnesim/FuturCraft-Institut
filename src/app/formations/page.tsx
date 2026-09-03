@@ -1,14 +1,23 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowUpRight, Phone } from "lucide-react";
 import { getFormations } from "@/lib/data-service";
 import { FormationsExplorer } from "@/components/FormationsExplorer";
 import { PageHero } from "@/components/PageHero";
+import { JsonLd, breadcrumbJsonLd, courseListJsonLd } from "@/components/JsonLd";
 
 export const dynamic = "force-dynamic";
-export const metadata = {
-  title: "Toutes les Formations | FuturCraft Institut Bénin",
+export const metadata: Metadata = {
+  title: "Toutes les Formations",
   description:
     "Découvrez nos 12 formations professionnelles aux métiers du numérique : Développement Web, IA, UI/UX Design, Drone, Graphisme, Audiovisuel à Godomey, Supermarché O Bénin Avant pk14.",
+  alternates: { canonical: "/formations" },
+  openGraph: {
+    title: "Toutes les Formations | FuturCraft Institut",
+    description:
+      "Découvrez nos 12 formations professionnelles aux métiers du numérique : Développement Web, IA, UI/UX Design, Drone, Graphisme, Audiovisuel à Godomey, Supermarché O Bénin Avant pk14.",
+    url: "/formations",
+  },
 };
 
 export default async function FormationsPage() {
@@ -17,6 +26,15 @@ export default async function FormationsPage() {
 
   return (
     <div className="bg-paper">
+      <JsonLd
+        data={[
+          courseListJsonLd(formations.filter((f) => f.isActive !== false)),
+          breadcrumbJsonLd([
+            { name: "Accueil", path: "/" },
+            { name: "Formations", path: "/formations" },
+          ]),
+        ]}
+      />
       <PageHero
         eyebrow="Catalogue 2026 — Admissions ouvertes"
         title={

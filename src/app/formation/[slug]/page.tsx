@@ -5,6 +5,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { ArrowUpRight, ArrowLeft, Clock, GraduationCap, MapPin, Calendar, ShieldCheck, Flame } from "lucide-react";
 import { FAQAccordion } from "@/components/FAQAccordion";
+import { JsonLd, breadcrumbJsonLd, courseJsonLd } from "@/components/JsonLd";
 
 export const dynamic = "force-dynamic";
 export async function generateStaticParams() {
@@ -15,12 +16,20 @@ export async function generateStaticParams() {
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await props.params;
   const formation = await getFormationBySlug(slug);
-  if (!formation) return {};
+  if (!formation) return { title: "Formation introuvable", robots: { index: false } };
+  const description =
+    formation.shortDescription ||
+    `Formation ${formation.title} proposée par FuturCraft Institut à Godomey, Supermarché O Bénin Avant pk14 (Bénin).`;
   return {
     title: `${formation.title} — Formation`,
-    description:
-      formation.shortDescription ||
-      `Formation ${formation.title} proposée par FuturCraft Institut à Godomey, Supermarché O Bénin Avant pk14 (Bénin).`,
+    description,
+    alternates: { canonical: `/formation/${formation.slug}` },
+    openGraph: {
+      type: "website",
+      title: `${formation.title} | Formation FuturCraft Institut`,
+      description,
+      url: `/formation/${formation.slug}`,
+    },
   };
 }
 
@@ -72,6 +81,16 @@ export default async function FormationDetailPage(props: { params: Promise<{ slu
     },
   ];
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+
   const nav = [
     ["#presentation", "Présentation"],
     ["#programme", "Programme"],
@@ -82,6 +101,31 @@ export default async function FormationDetailPage(props: { params: Promise<{ slu
 
   return (
     <div className="bg-paper">
+      <JsonLd
+        data={[
+          courseJsonLd({
+            slug: formation.slug,
+            title: formation.title,
+            shortDescription: formation.shortDescription,
+            category: formation.category,
+            duration: formation.duration,
+            level: formation.level,
+            price: formation.price,
+            mode: formation.mode,
+            campus: formation.campus,
+            imageUrl: formation.imageUrl,
+            competencies,
+            jobs,
+            sessions: promotions.map((p) => ({ name: p.name, startDate: p.startDate, endDate: p.endDate })),
+          }),
+          breadcrumbJsonLd([
+            { name: "Accueil", path: "/" },
+            { name: "Formations", path: "/formations" },
+            { name: formation.title, path: `/formation/${formation.slug}` },
+          ]),
+          faqJsonLd,
+        ]}
+      />
       {/* En-tête */}
       <section className="border-b border-ink bg-paper">
         <div className="wrap pt-8 lg:pt-12">

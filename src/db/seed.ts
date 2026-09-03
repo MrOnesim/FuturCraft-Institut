@@ -1154,7 +1154,7 @@ export async function seedDatabase() {
           "Le numérique explose en Afrique de l'Ouest. Découvrez les compétences les plus recherchées par les recruteurs et comment FuturCraft prépare les talents.",
         content: `Le continent africain vit une révolution technologique sans précédent. Au Bénin, l'essor de la digitalisation des services publics, l'arrivée de la fibre optique et la création d'écosystèmes d'innovation comme Sèmè City démontrent l'urgence d'une main-d'œuvre hautement qualifiée.
 
-ì FuturCraft Institut, nous avons fait le choix radical de la pratique : 80% de nos cours se font face à un projet réel, avec un mentorat continu et des technologies utilisées au quotidien dans les entreprises de premier plan.
+À FuturCraft Institut, nous avons fait le choix radical de la pratique : 80% de nos cours se font face à un projet réel, avec un mentorat continu et des technologies utilisées au quotidien dans les entreprises de premier plan.
 
 Qu'il s'agisse de développement Fullstack, de modélisation en intelligence artificielle, d'audiovisuel ou de pilotage de drones, notre mission est de transformer la curiosité en expertise professionnelle rentable.`,
         coverImage: articleImages["pourquoi-se-former-au-numerique-au-benin-en-2025"],

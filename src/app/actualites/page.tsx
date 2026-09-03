@@ -1,4 +1,5 @@
 import { getBlogArticles } from "@/lib/data-service";
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Clock, ArrowUpRight } from "lucide-react";
@@ -6,10 +7,17 @@ import { PageHero } from "@/components/PageHero";
 import { NewsletterForm } from "@/components/NewsletterForm";
 
 export const dynamic = "force-dynamic";
-export const metadata = {
-  title: "Actualités & Blog Tech | FuturCraft Institut Bénin",
+export const metadata: Metadata = {
+  title: "Actualités & Blog Tech",
   description:
     "Suivez les dernières tendances numériques, les conseils d'orientation et les événements de FuturCraft Institut à Godomey, Supermarché O Bénin Avant pk14.",
+  alternates: { canonical: "/actualites" },
+  openGraph: {
+    title: "Actualités & Blog Tech | FuturCraft Institut",
+    description:
+      "Suivez les dernières tendances numériques, les conseils d'orientation et les événements de FuturCraft Institut à Godomey, Supermarché O Bénin Avant pk14.",
+    url: "/actualites",
+  },
 };
 
 export default async function ActualitesPage() {
@@ -65,12 +73,16 @@ export default async function ActualitesPage() {
                         <Clock className="h-3 w-3" /> {lead.readTime}
                       </span>
                     </p>
-                    <h2 className="display-md mt-5 text-ink">{lead.title}</h2>
+                    <h2 className="display-md mt-5 text-ink">
+                      <Link href={`/actualites/${lead.slug}`} className="hover:text-brand-700">
+                        {lead.title}
+                      </Link>
+                    </h2>
                     <p className="mt-5 text-base leading-7 text-ink/65">{lead.excerpt}</p>
                   </div>
                   <div className="mt-10 flex items-center justify-between gap-4 border-t border-ink pt-5">
                     <span className="text-sm font-semibold text-ink">{lead.author}</span>
-                    <Link href="/actualites" className="arrow-link text-ink">
+                    <Link href={`/actualites/${lead.slug}`} className="arrow-link text-ink">
                       Lire l&apos;article <ArrowUpRight className="h-4 w-4" />
                     </Link>
                   </div>
@@ -90,7 +102,7 @@ export default async function ActualitesPage() {
               </div>
               <div className="grid-lines mt-8 grid md:grid-cols-2 xl:grid-cols-3">
                 {rest.map((art, i) => (
-                  <article key={art.id} className="group flex flex-col bg-paper">
+                  <Link key={art.id} href={`/actualites/${art.slug}`} className="group flex flex-col bg-paper">
                     <div className="relative aspect-[16/10] overflow-hidden border-b border-ink bg-ink/5">
                       <Image
                         src={art.coverImage}
@@ -120,7 +132,7 @@ export default async function ActualitesPage() {
                         </span>
                       </div>
                     </div>
-                  </article>
+                  </Link>
                 ))}
               </div>
             </section>
@@ -139,7 +151,7 @@ export default async function ActualitesPage() {
             </h2>
           </div>
           <div className="lg:col-span-5">
-            <NewsletterForm />
+            <NewsletterForm source="actualites" />
           </div>
         </div>
       </section>
